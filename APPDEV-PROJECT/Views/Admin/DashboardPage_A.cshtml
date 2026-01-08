@@ -1,0 +1,174 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HanapBuhay - Admin Dashboard</title>
+
+    <!-- Ionicons Library -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="~/Styles/DashboardPage_A_styles.css">
+</head>
+<body>
+    <!-- ========== HEADER SECTION ========== -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="~/images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="header-buttons">
+                <a href="@Url.Action("DashboardPage_A", "Admin")" class="header-btn">
+                    <ion-icon name="home-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("Report_A", "Admin")" class="header-btn">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("AppMan_A", "Admin")" class="header-btn">
+                    <ion-icon name="warning-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("LandingPage", "Home")" class="header-btn">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== MAIN DASHBOARD CONTAINER ========== -->
+    <div class="dashboard-container">
+
+        <!-- Dashboard Title -->
+        <h1 class="dashboard-title">Admin Dashboard</h1>
+        <!-- Divider Line -->
+        <hr class="dashboard-divider">
+
+        <!-- ========== TOTAL APPLICATIONS SECTION ========== -->
+        <div class="total-applications">
+            <div class="app-header">
+                <div>
+                    <div class="app-title">Total Applications</div>
+                    <div class="app-subtitle">Overall Application Remittals and Application Tracking</div>
+                </div>
+                <div class="app-count">14</div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+                <span class="progress-label">Completion Rate: 38%</span>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <span class="progress-text">5 of 14 Processed</span>
+            </div>
+        </div>
+
+        <!-- ========== STATISTICS GRID SECTION ========== -->
+        <div class="stats-grid">
+
+            <!-- Approved Request Card -->
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #ffffff;">
+                    <ion-icon name="checkmark-outline"></ion-icon>
+                </div>
+                <div class="stat-label">Approved Request</div>
+                <div class="stat-number">15</div>
+            </div>
+
+            <!-- Pending Request Card -->
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #ffffff;">
+                    <ion-icon name="time-outline"></ion-icon>
+                </div>
+                <div class="stat-label">Pending Request</div>
+                <div class="stat-number">10</div>
+            </div>
+
+            <!-- Rejected Request Card -->
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #ffffff;">
+                    <ion-icon name="close-outline"></ion-icon>
+                </div>
+                <div class="stat-label">Rejected Request</div>
+                <div class="stat-number">10</div>
+            </div>
+
+            <!-- Reports Card -->
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #ffffff;">
+                    <ion-icon name="warning-outline"></ion-icon>
+                </div>
+                <div class="stat-label">Reports</div>
+                <div class="stat-number">3</div>
+            </div>
+        </div>
+
+        <!-- ========== CHART AND ACTIVITIES SECTION ========== -->
+        <div class="main-grid">
+
+            <!-- Application by Status Chart -->
+            <div class="chart-card">
+                <div class="card-header">
+                    <div class="card-title">Application by Status</div>
+                    <div class="card-icon">
+                        <ion-icon name="pie-chart-outline"></ion-icon>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="pie-chart"></div>
+                </div>
+            </div>
+
+            <!-- Recent Activities List -->
+            <div class="activity-card">
+                <div class="card-header">
+                    <div class="card-title">Recent Activities</div>
+                    <div class="card-icon">
+                        <ion-icon name="time-outline"></ion-icon>
+                    </div>
+                </div>
+
+                <!-- Activity Items -->
+                <div class="activity-list">
+                    <!-- Activity Item 1 -->
+                    <div class="activity-item">
+                        <ion-icon name="person-outline" class="activity-icon"></ion-icon>
+                        <div class="activity-text">Admin Carlo approved Request #220</div>
+                    </div>
+
+                    <!-- Activity Item 2 -->
+                    <div class="activity-item">
+                        <ion-icon name="document-outline" class="activity-icon"></ion-icon>
+                        <div class="activity-text">Request #201 marked as "Pending Verification"</div>
+                    </div>
+
+                    <!-- Activity Item 3 -->
+                    <div class="activity-item">
+                        <ion-icon name="person-outline" class="activity-icon"></ion-icon>
+                        <div class="activity-text">Edited user profile for applicant Anna Reyes</div>
+                    </div>
+
+                    <!-- Activity Item 4 -->
+                    <div class="activity-item">
+                        <ion-icon name="trash-outline" class="activity-icon"></ion-icon>
+                        <div class="activity-text">Request #189 deleted by Admin John</div>
+                    </div>
+
+                    <!-- Activity Item 5 -->
+                    <div class="activity-item">
+                        <ion-icon name="mail-outline" class="activity-icon"></ion-icon>
+                        <div class="activity-text">Email confirmation sent to user paon.m</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

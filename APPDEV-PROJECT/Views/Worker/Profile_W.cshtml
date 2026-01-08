@@ -1,0 +1,294 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HanapBuhay</title>
+    <link rel="stylesheet" href="~/Styles/Profile_W_styles.css" />
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="~/Images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+
+            <div class="nav-links">
+                <a href="@Url.Action("JobReqPage_W", "Worker")"><button class="home-btn"><ion-icon name="home-outline"></ion-icon></button></a>
+                <a href="@Url.Action("ChatPage_W", "Worker")"><button class="chat-btn"><ion-icon name="chatbubble-ellipses-outline"></ion-icon></button></a>
+                <a href="@Url.Action("NotifPage_W", "Worker")"><button class="notif-btn"><ion-icon name="notifications-outline"></ion-icon></button></a>
+                <a href="@Url.Action("Profile_W", "Worker")"><button class="person-btn"><ion-icon name="person-outline" class="active"></ion-icon></button></a>
+                <a href="@Url.Action("LandingPage", "Home")"><button class="logout-btn"><ion-icon name="log-in-outline"></ion-icon></button></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div>
+            <div class="card profile-card">
+                <div class="avatar" onclick="document.getElementById('photoInput').click()">
+                    <img id="profileImage" src="" alt="Profile Picture" class="profile-img">
+                    <div class="avatar-placeholder" id="placeholder">
+                        <span class="add-photo-icon"><ion-icon name="camera-outline"></ion-icon></span>
+                        <span class="add-photo-text">Add Photo</span>
+                    </div>
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                </div>
+                <div class="name">John Paul T. Tamares</div>
+                <div class="title">Technician</div>
+                <div class="location">1 Rosas Technical Village, Pasay City</div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">23</div>
+                        <div class="stat-label">Projects Completed</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4.9</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">3+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-report" id="reportBtn">
+                        <ion-icon name="alert-circle-outline"></ion-icon> Report
+                    </button>
+                    <button class="btn btn-contact">
+                        <ion-icon name="call-outline"></ion-icon> Contact Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="card about-section">
+                <div class="section-title">
+                    About Me <ion-icon name="person-circle-outline"></ion-icon>
+                </div>
+                <div class="about-text">
+                    I'm John Paul T. Tamares, a dedicated technician with 3 years of hands-on experience in troubleshooting, maintenance, and repairs. I specialize in delivering reliable technical support and practical solutions to keep systems running smoothly.
+                </div>
+                <div class="about-text">
+                    With a detail-oriented and hands-on approach, I take pride in delivering quality work, improving system performance, and supporting smooth day-to-day operations.
+                </div>
+                <button class="btn-new-app">
+                    <ion-icon name="newspaper-outline"></ion-icon>New Application
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <div class="card">
+                <div class="section-title">Portfolio Highlights</div>
+                <div class="highlights">
+                    <div class="highlight">
+                        <div class="highlight-value">23+</div>
+                        <div class="highlight-label">Projects Completed</div>
+                    </div>
+                    <div class="highlight">
+                        <div class="highlight-value">3+</div>
+                        <div class="highlight-label">Years Experience</div>
+                    </div>
+                    <div class="highlight">
+                        <div class="highlight-value">4.9</div>
+                        <div class="highlight-label">Client Rating</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="section-title">Client Reviews</div>
+                <div class="reviews-grid">
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-name">Maria S.</div>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                        <div class="review-text">
+                            Professional and efficient. Fixed my problem in no time.
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-name">Liza M.</div>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                        <div class="review-text">
+                            Friendly, fast, and trustworthy technician.
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-name">Mark R.</div>
+                            <div class="stars">★★★★<span class="star-empty">★</span></div>
+                        </div>
+                        <div class="review-text">
+                            Very professional, just took a little longer than expected.
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-name">Monkey I.</div>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                        <div class="review-text">
+                            What a nice one, Thumbs Up!
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-name">Carlo D.</div>
+                            <div class="stars">★★★★<span class="star-empty">★</span></div>
+                        </div>
+                        <div class="review-text">
+                            Very reliable. Excellent at troubleshooting.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Report Content</h2>
+                <button class="modal-close" id="closeModal">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="report-question">What are you reporting?</div>
+                <div class="reason-grid">
+                    <button class="reason-btn" data-reason="inappropriate">
+                        <ion-icon name="warning-outline"></ion-icon>
+                        Inappropriate Content
+                    </button>
+                    <button class="reason-btn" data-reason="misleading">
+                        <ion-icon name="alert-outline"></ion-icon>
+                        Misleading Info
+                    </button>
+                    <button class="reason-btn" data-reason="scam">
+                        <ion-icon name="shield-outline"></ion-icon>
+                        Scam
+                    </button>
+                    <button class="reason-btn" data-reason="spam">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        Spam or Ads
+                    </button>
+                    <button class="reason-btn" data-reason="fake">
+                        <ion-icon name="person-outline"></ion-icon>
+                        Fake Profile
+                    </button>
+                    <button class="reason-btn" data-reason="harassment">
+                        <ion-icon name="hand-left-outline"></ion-icon>
+                        Harassment
+                    </button>
+                    <button class="reason-btn" data-reason="violence">
+                        <ion-icon name="pulse-outline"></ion-icon>
+                        Violence/Threats
+                    </button>
+                    <button class="reason-btn" data-reason="other">
+                        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+                        Other
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Content type</label>
+                    <select class="form-select">
+                        <option>Select content type</option>
+                        <option>Profile Information</option>
+                        <option>Service Description</option>
+                        <option>Reviews</option>
+                        <option>Photos</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" placeholder="Provide specific details about what you're reporting..."></textarea>
+                </div>
+
+                <div class="important-notice">
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                    <div class="notice-text">
+                        <strong>Important Notice:</strong> False reports may result in account suspension. Please report content that violates our community guidelines.
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="modal-btn modal-btn-cancel" id="cancelBtn">Cancel</button>
+                    <button class="modal-btn modal-btn-submit">Submit Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('profileImage');
+                    const placeholder = document.getElementById('placeholder');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+    <script>
+        // Modal functionality
+        const reportBtn = document.getElementById('reportBtn');
+        const modal = document.getElementById('reportModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const reasonBtns = document.querySelectorAll('.reason-btn');
+
+        reportBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Reason button selection
+        reasonBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                reasonBtns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

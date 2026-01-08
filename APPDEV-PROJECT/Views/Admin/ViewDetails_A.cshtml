@@ -1,0 +1,159 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HanapBuhay - Admin Dashboard</title>
+    <link rel="stylesheet" href="~/Styles/ViewDetails_A_styles.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="~/images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+
+            <div class="header-buttons">
+                <a href="@Url.Action("DashboardPage_A", "Admin")" class="header-btn">
+                    <ion-icon name="home-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("AppMan_A", "Admin")" class="header-btn active">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("Report_A", "Admin")" class="header-btn">
+                    <ion-icon name="warning-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("LandingPage", "Home")" class="header-btn">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="dashboard-title">Admin Dashboard</h1>
+
+        <a href="@Url.Action("AppMan_A", "Admin")" class="back-link">
+            <ion-icon name="arrow-back"></ion-icon>
+            Back to Application
+        </a>
+
+        <div class="application-card">
+            <div class="application-header">
+                <div class="applicant-info">
+                    <div class="applicant-photo"></div>
+                    <div class="applicant-details">
+                        <h2>John Doe</h2>
+                        <div class="app-id"><ion-icon name="hashtag-outline"></ion-icon>APP-000001</div>
+                        <div class="submitted-date">Submitted on: September 30th, 2025 11:52 PM</div>
+                    </div>
+                </div>
+                <div class="application-actions">
+                    <span class="status-badge">Pending</span>
+                    <button class="action-btn reject-btn">
+                        <ion-icon name="close-circle"></ion-icon>
+                        Reject
+                    </button>
+                    <button class="action-btn approve-btn">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        Approve
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-sections">
+                <!-- Personal Information -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <ion-icon name="person"></ion-icon>
+                        <span>Personal Information</span>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-item">
+                            <div class="info-label">Full Name</div>
+                            <div class="info-value">Juan M. Delacruz</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Sex</div>
+                            <div class="info-value">Male</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Age</div>
+                            <div class="info-value">27</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Location</div>
+                            <div class="info-value">Bulacan</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Date of Birth</div>
+                            <div class="info-value">January 01, 2005</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Place of Birth</div>
+                            <div class="info-value">Manila, Philippines</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Contact Number</div>
+                            <div class="info-value">09486238824</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">johnDoe@gmail.com</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Background -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <ion-icon name="briefcase"></ion-icon>
+                        <span>Work background</span>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-item">
+                            <div class="info-label">Experience</div>
+                            <div class="info-value">Carpenter</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Years of Working</div>
+                            <div class="info-value">10 years of working government</div>
+                        </div>
+                        <div class="info-item summary-item">
+                            <div class="info-label">Summary</div>
+                            <div class="info-value summary-text">
+                                As a skilled carpenter, I take pride in crafting, repairing, and building sturdy wooden structures and furniture that bring both function and beauty into everyday spaces.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ID and Picture of Works -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <ion-icon name="images"></ion-icon>
+                        <span>ID and Picture of Works</span>
+                    </div>
+                    <div class="documents-grid">
+                        <div class="document-item">
+                            <img src="https://images.unsplash.com/photo-1589792923962-537704632910?w=400&h=300&fit=crop" alt="Valid ID">
+                        </div>
+                        <div class="document-item">
+                            <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop" alt="Work Photo">
+                        </div>
+                        <div class="document-item large-photo">
+                            <img src="https://images.unsplash.com/photo-1522382349581-a3a6c0d53b1f?w=600&h=400&fit=crop" alt="Woodworking">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

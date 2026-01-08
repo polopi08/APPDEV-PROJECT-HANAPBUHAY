@@ -1,0 +1,316 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #FFFFFF;
+}
+.header {
+    background: linear-gradient(to right, #FFF8E7, #F6A33C);
+    padding: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.40);
+    position: relative; 
+    z-index: 10; 
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    margin-top: -16px;
+    height: 100px;
+    width: auto;
+    margin-bottom: -40px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-btn {
+    font-family: 'Poppins', sans-serif;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.3s ease, color 0.3s ease;
+    font-size: 24px;
+    color: #460F02;
+    margin-right: 25px; /* space to the right of each button * adjust the spaces each icons*/
+    position: relative;
+    top: 5px; /* moves the icon down 3px */
+}
+
+.header-btn:hover {
+    transform: scale(1.1);
+    color: #FFFFFF;
+}
+
+.header-btn.active {
+    color: #460F02;
+    font-weight: bold;
+    border-bottom: 3px solid #460F02;
+}
+
+/* Main Content */
+.main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.dashboard-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #460F02;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #460F02;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    color: #F6A33C;
+}
+
+.back-link ion-icon {
+    font-size: 16px;
+}
+
+/* Application Card */
+.application-card {
+    background: white;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.application-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.applicant-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.applicant-photo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #F6A33C;
+}
+
+.applicant-details h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #460F02;
+    margin-bottom: 3px;
+}
+
+.applicant-details .app-id {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.applicant-details .submitted-date {
+    font-size: 12px;
+    color: #999;
+}
+
+.application-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.status-badge {
+    background: #FFEAA7;
+    color: #856404;
+    padding: 6px 16px;
+    border-radius: 15px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.action-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.reject-btn {
+    background: #FF4757;
+    color: white;
+}
+
+.reject-btn:hover {
+    background: #EE5A6F;
+}
+
+.approve-btn {
+    background: #2ECC71;
+    color: white;
+}
+
+.approve-btn:hover {
+    background: #27AE60;
+}
+
+.action-btn ion-icon {
+    font-size: 16px;
+}
+
+/* Info Sections */
+.info-sections {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.info-section {
+    background: #FFF8E7;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #F0E4CC;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 600;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #F0E4CC;
+}
+
+.section-header ion-icon {
+    font-size: 18px;
+    color: #460F02;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-section:first-child .info-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.info-value {
+    font-size: 12px;
+    color: #666;
+    font-weight: 400;
+}
+
+.summary-item {
+    margin-top: 5px;
+}
+
+.summary-text {
+    line-height: 1.6;
+    text-align: justify;
+}
+
+/* Documents Grid */
+.documents-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.document-item {
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px dashed #D0D0D0;
+    background-color: #F9F9F9;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.document-item img {
+    display: none;
+}
+
+.large-photo {
+    grid-column: span 2;
+    min-height: 180px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .info-sections {
+        grid-template-columns: 1fr;
+    }
+    
+    .documents-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .large-photo {
+        grid-column: span 2;
+    }
+}
+

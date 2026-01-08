@@ -1,0 +1,373 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: white;
+}
+
+/* ===============================
+   Header Styles
+=============================== */
+/* Header */
+.header {
+    background: linear-gradient(to right, #FFF8E7, #F6A33C);
+    padding: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.40);
+    position: relative; 
+    z-index: 10; 
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    margin-top: -16px;
+    height: 100px;
+    width: auto;
+    margin-bottom: -40px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 50px; 
+    align-items: center;
+}
+
+.header-container button {
+    background: none; 
+    border: none;
+    cursor: pointer;
+    color: #460F02;
+    padding: 0; 
+    transition: all 0.3s ease;
+}
+
+.header-container button:hover {
+    background: none; 
+    transform: scale(1.1); 
+}
+
+.header-container button ion-icon.active {
+    color: #460F02;
+    padding: 8px;
+    font-weight: bold;
+    border-bottom: 3px solid #460F02;
+}
+
+.header-container button ion-icon {
+    font-size: 28px;
+    color: #460F02;
+    transition: all 0.3s ease;
+}
+
+/* Notifications Container */
+.notifications-container {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    max-width: 1400px;
+    margin: 30px auto;
+    gap: 30px;
+    padding: 0 20px;
+}
+
+/* Notifications Main */
+.notifications-main {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.page-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #2c1810;
+    margin-bottom: 30px;
+}
+
+/* Filters */
+.notifications-filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+}
+
+.filter-btn.active {
+    color: #2c1810;
+    font-weight: 600;
+}
+
+.filter-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -22px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #2c1810;
+}
+
+.sort-btn {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.sort-btn ion-icon {
+    font-size: 18px;
+}
+
+/* Notifications List */
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.notification-item:hover {
+    background: #fafafa;
+    border-color: #F6A33C;
+    box-shadow: 0 2px 8px rgba(246, 163, 60, 0.1);
+}
+
+.notification-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notification-icon ion-icon {
+    font-size: 28px;
+    color: #2c1810;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-text {
+    font-size: 15px;
+    color: #2c1810;
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+
+
+/* ===============================
+   Main Container
+=============================== */
+.container {
+    width: 100%;
+    margin: 0;
+    padding: 50px 20px;
+    background: white;
+    min-height: calc(100vh - 90px);
+}
+
+.page-header {
+    margin-bottom: 40px;
+    margin-left: 52px;
+}
+
+.page-header h1 {
+    font-size: 36px;
+    color: #460F02;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.page-header p {
+    color: #666;
+    font-size: 16px;
+}
+
+.divider {
+    border: none;
+    border-top: 2px solid #e0e0e0;
+    margin: 20px 0;
+    width: 1400px;
+    margin-left: 52px;
+    margin-top: -10px;
+}
+
+/* ===============================
+   Job Requests Grid
+=============================== */
+.requests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+    margin-left: 52px;
+    margin-right: 35px;
+
+}
+
+.request-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.request-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.card-content {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.profile-image {
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-placeholder {
+    width: 60px;
+    height: 60px;
+    background: #90caf9;
+    border-radius: 50%;
+}
+
+.card-details {
+    flex: 1;
+}
+
+.client-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #460F02;
+    margin-bottom: 8px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #666;
+}
+
+.detail-item ion-icon {
+    font-size: 16px;
+    color: #460F02;
+}
+
+.request-message {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+}
+
+.card-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn {
+    flex: 1;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-accept {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-accept:hover {
+    background: #45a049;
+    transform: scale(1.02);
+}
+
+.btn-reject {
+    background: #f44336;
+    color: white;
+}
+
+.btn-reject:hover {
+    background: #da190b;
+    transform: scale(1.02);
+}

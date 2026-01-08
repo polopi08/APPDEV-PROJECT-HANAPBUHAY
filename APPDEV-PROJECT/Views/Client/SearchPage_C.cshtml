@@ -1,0 +1,184 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HanapBuhay - Find the Right Worker</title>
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="~/Styles/SearchPage_C_styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="~/Images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+
+            <!-- Buttons on the right -->
+            <div class="header-buttons">
+                <a href="@Url.Action("SearchPage_C", "Client")" class="header-btn">
+                    <ion-icon name="home-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("Messages", "Client")" class="header-btn">
+                    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("Notifications", "Client")" class="header-btn">
+                    <ion-icon name="notifications-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("LandingPage", "Home")" class="header-btn logout-btn">
+                    <ion-icon name="log-in-outline"></ion-icon>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Header and Search Row -->
+        <div class="header-search-row">
+            <div class="header-section">
+                <h1>Find the Right Worker</h1>
+                <p>Browse trusted skilled workers near you</p>
+            </div>
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" placeholder="Search services...">
+                    <ion-icon name="search-outline"></ion-icon>
+                </div>
+                <div class="location-box">
+                    <ion-icon name="location-outline"></ion-icon>
+                    <input type="text" placeholder="Enter location...">
+                </div>
+                <button class="find-workers-btn">Find Workers Around You</button>
+                <select class="filter-dropdown">
+                    <option value="">Filter</option>
+                    <option value="cook">Cook</option>
+                    <option value="carpenter">Carpenter</option>
+                    <option value="electrician">Electrician</option>
+                </select>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- Workers Grid -->
+        <div class="workers-grid">
+            <div class="worker-card">
+                <div class="worker-header">
+                    <div class="worker-name">Kyle Bernido</div>
+                    <span class="worker-distance">0.06km away</span>
+                </div>
+                <div class="worker-image">Profile Image</div>
+                <div class="worker-job">Carpenter</div>
+                <div class="rating">
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                </div>
+                <button class="view-details-btn">View Details</button>
+            </div>
+
+            <div class="worker-card">
+                <div class="worker-header">
+                    <div class="worker-name">Vivian Yambao</div>
+                    <span class="worker-distance">0.06km away</span>
+                </div>
+                <div class="worker-image">Profile Image</div>
+                <div class="worker-job">Cook</div>
+                <div class="rating">
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                </div>
+                <button class="view-details-btn">View Details</button>
+            </div>
+
+            <div class="worker-card">
+                <div class="worker-header">
+                    <div class="worker-name">Viaani Ubalde</div>
+                    <span class="worker-distance">0.06km away</span>
+                </div>
+                <div class="worker-image">Profile Image</div>
+                <div class="worker-job">Electrician</div>
+                <div class="rating">
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                </div>
+                <button class="view-details-btn">View Details</button>
+            </div>
+
+            <div class="worker-card">
+                <div class="worker-header">
+                    <div class="worker-name">Kyle Bernido</div>
+                    <span class="worker-distance">0.06km away</span>
+                </div>
+                <div class="worker-image">Profile Image</div>
+                <div class="worker-job">Technician</div>
+                <div class="rating">
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                </div>
+                <button class="view-details-btn">View Details</button>
+            </div>
+
+            <div class="worker-card">
+                <div class="worker-header">
+                    <div class="worker-name">Giselle Valdez</div>
+                    <span class="worker-distance">0.06km away</span>
+                </div>
+                <div class="worker-image">Profile Image</div>
+                <div class="worker-job">Plumber</div>
+                <div class="rating">
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                </div>
+                <button class="view-details-btn">View Details</button>
+            </div>
+
+            <div class="worker-card">
+                <div class="worker-header">
+                    <div class="worker-name">Sophia Cutue</div>
+                    <span class="worker-distance">0.06km away</span>
+                </div>
+                <div class="worker-image">Profile Image</div>
+                <div class="worker-job">Plumber</div>
+                <div class="rating">
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                    <span class="star"><ion-icon name="star"></ion-icon></span>
+                </div>
+                <button class="view-details-btn">View Details</button>
+            </div>
+
+            <!-- <div class="workers-grid" id="workers-grid">
+                 //Worker cards will be inserted here by JS //
+            </div> then yung nasa taas na yan, dedma na sya-->
+            <!-- Additional worker cards... (keep all existing as is) -->
+        </div>
+    </div>
+</body>
+</html>

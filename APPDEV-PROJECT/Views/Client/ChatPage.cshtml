@@ -1,0 +1,218 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HanapBuhay - Messages</title>
+    <link rel="stylesheet" href="~/Styles/ChatPage_C_styles.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="~/Images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+
+            <div class="nav-links">
+                <a href="@Url.Action("SearchPage_C", "Client")"><button class="home-btn"><ion-icon name="home-outline"></ion-icon></button></a>
+                <a href="@Url.Action("Messages", "Client")"><button class="chat-btn"><ion-icon name="chatbubble-ellipses-outline" class="active"></ion-icon></button></a>
+                <a href="@Url.Action("Notifications", "Client")"><button class="notif-btn"><ion-icon name="notifications-outline"></ion-icon></button></a>
+                <a href="@Url.Action("LandingPage", "Home")"><button class="logout-btn"><ion-icon name="log-in-outline"></ion-icon></button></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Left Sidebar -->
+        <div class="chat-sidebar">
+            <div class="chat-header">
+                <h2>Messages</h2>
+                <button class="new-chat-btn">
+                    <ion-icon name="create-outline"></ion-icon>
+                </button>
+            </div>
+
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <ion-icon name="search-outline"></ion-icon>
+                    <input type="text" class="search-input" placeholder="Search conversations...">
+                </div>
+            </div>
+
+            <div class="chat-list">
+                <div class="chat-item">
+                    <div class="chat-avatar" style="background: #FFE5B4;">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-name">Kyle Bernido</div>
+                        <div class="chat-preview">Can you start tomorrow?</div>
+                    </div>
+                </div>
+
+                <div class="chat-item">
+                    <div class="chat-avatar" style="background: #90EE90;">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-name">Vivian Yambao</div>
+                        <div class="chat-preview">Thank you for the project!</div>
+                    </div>
+                </div>
+
+                <div class="chat-item">
+                    <div class="chat-avatar" style="background: #FFFF99;">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-name">Viaani Ubalde</div>
+                        <div class="chat-preview">I'll be there by 10 AM</div>
+                    </div>
+                </div>
+
+                <div class="chat-item">
+                    <div class="chat-avatar" style="background: #E6E6FA;">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-name">Giselle Valdez</div>
+                        <div class="chat-preview">Plumbing job completed!</div>
+                    </div>
+                </div>
+
+                <div class="chat-item">
+                    <div class="chat-avatar" style="background: #FFB6C1;">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-name">Sophia Cutue</div>
+                        <div class="chat-preview">Looking forward to working with you</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Chat Window -->
+        <div class="chat-window">
+            <div class="chat-window-header">
+                <div class="current-chat-avatar">
+                    <ion-icon name="person-outline"></ion-icon>
+                </div>
+                <div class="current-chat-info">
+                    <h3>Kyle Bernido</h3>
+                    <div class="current-chat-status">Active now</div>
+                </div>
+            </div>
+
+            <div class="chat-messages">
+                <div class="message">
+                    <div class="message-avatar">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-sender">Kyle</div>
+                        <div class="message-bubble">Can you start tomorrow?</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <button class="attach-btn">
+                    <ion-icon name="add-circle-outline"></ion-icon>
+                </button>
+                <input type="text" class="chat-input" placeholder="Type a message...">
+                <button class="send-btn">
+                    <ion-icon name="send-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get all chat items
+        const chatItems = document.querySelectorAll('.chat-item');
+        const chatWindowHeader = document.querySelector('.current-chat-info h3');
+        const chatMessages = document.querySelector('.chat-messages');
+        const chatInput = document.querySelector('.chat-input');
+        const sendBtn = document.querySelector('.send-btn');
+
+        // Add click event to each chat item
+        chatItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                chatItems.forEach(el => {
+                    el.classList.remove('active');
+                    el.style.background = '';
+                });
+
+                // Add active class to clicked item
+                this.classList.add('active');
+                this.style.background = '#FFF8E7';
+
+                // Update the chat window header with selected person's name
+                const selectedName = this.querySelector('.chat-name').textContent;
+                chatWindowHeader.textContent = selectedName;
+
+                // Clear previous messages
+                const selectedPreview = this.querySelector('.chat-preview').textContent;
+                chatMessages.innerHTML = `
+                    <div class="message">
+                        <div class="message-avatar">
+                            <ion-icon name="person-outline"></ion-icon>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-sender">${selectedName}</div>
+                            <div class="message-bubble">${selectedPreview}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        // Function to send message
+        function sendMessage() {
+            const messageText = chatInput.value.trim();
+
+            if (messageText === '') return; // Don't send empty messages
+
+            // Create sent message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message sent';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <ion-icon name="person-outline"></ion-icon>
+                </div>
+                <div class="message-content">
+                    <div class="message-sender">You</div>
+                    <div class="message-bubble">${messageText}</div>
+                </div>
+            `;
+
+            chatMessages.appendChild(messageDiv);
+
+            // Clear input
+            chatInput.value = '';
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send button click
+        sendBtn.addEventListener('click', sendMessage);
+
+        // Send message with Enter key
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

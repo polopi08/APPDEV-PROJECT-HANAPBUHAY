@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>APPDEV_PROJECT</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Home\AppMan_A.cshtml" />
+    <Content Remove="Views\Home\ChatPage_W.cshtml" />
+    <Content Remove="Views\Home\DashboardPage_A.cshtml" />
+    <Content Remove="Views\Home\InfoPage_C.cshtml" />
+    <Content Remove="Views\Home\InfoPage_W.cshtml" />
+    <Content Remove="Views\Home\JobReqPage_W.cshtml" />
+    <Content Remove="Views\Home\loginPage.cshtml" />
+    <Content Remove="Views\Home\NotifPage_W.cshtml" />
+    <Content Remove="Views\Home\Profile_W.cshtml" />
+    <Content Remove="Views\Home\registerPage.cshtml" />
+    <Content Remove="Views\Home\Report_A.cshtml" />
+    <Content Remove="Views\Home\SearchPage_C.cshtml" />
+    <Content Remove="Views\Home\ViewDetails_A.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Admin\AppMan_A.cshtml" />
+    <None Include="Views\Worker\ChatPage_W.cshtml" />
+    <None Include="Views\Admin\DashboardPage_A.cshtml" />
+    <None Include="Views\Client\InfoPage_C.cshtml" />
+    <None Include="Views\Worker\InfoPage_W.cshtml" />
+    <None Include="Views\Worker\JobReqPage_W.cshtml" />
+    <None Include="Views\Account\LoginPage.cshtml" />
+    <None Include="Views\Worker\NotifPage_W.cshtml" />
+    <None Include="Views\Worker\Profile_W.cshtml" />
+    <None Include="Views\Account\RegisterPage.cshtml" />
+    <None Include="Views\Admin\Report_A.cshtml" />
+    <None Include="Views\Client\SearchPage_C.cshtml" />
+    <None Include="Views\Admin\ViewDetails_A.cshtml" />
+  </ItemGroup>
+
+</Project>

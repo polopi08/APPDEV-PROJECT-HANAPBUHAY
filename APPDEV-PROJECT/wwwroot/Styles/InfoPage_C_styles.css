@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #E5E5E5;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(to right, #FFF8E7, #F6A33C);
+    padding: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.40);
+    position: relative; 
+    z-index: 10; 
+}
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    margin-top: -16px;
+    height: 100px;
+    width: auto;
+    margin-bottom: -40px;
+}
+
+.logout-btn {
+    background: none; /* Changed from transparent */
+    border: none;
+    cursor: pointer;
+    color: #460F02;
+    padding: 0; /* Remove padding */
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: none; /* Remove hover background */
+    transform: scale(1.1); /* Just scale the icon instead */
+}
+
+.logout-btn ion-icon {
+    font-size: 28px;
+    color: #460F02;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover ion-icon {
+    color: #FFFFFF;
+}
+
+/* Main Content */
+.main-content {
+    padding: -20px;
+    
+}
+
+.form-container {
+    background: white;
+    padding: 30px 0 100px;
+    width: 100vw; 
+    min-height: 100vh;
+    margin: 0;
+    margin-left: calc(-50vw + 50%); 
+    margin-right: calc(-50vw + 50%);
+}
+
+.form-header {
+    margin-bottom: 20px;
+}
+
+.form-header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #460F02;
+    margin-bottom: 8px;
+    margin-left: 85px;
+}
+
+.breadcrumb {
+    font-size: 14px;
+    color: #666;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #460F02;
+    margin-bottom: 50px;
+    margin-left: 85px;
+    width: 1380px;
+}
+
+/* Form Sections */
+.form-section {
+    margin-bottom: 30px;
+}
+
+#work-background {
+    margin-top: 50px;
+}
+
+#contact-information {
+    margin-top: 30px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #460F02;
+    margin-bottom: 20px;
+    margin-left: 85px;
+    margin-top: -10px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 300px 300px 300px;
+    gap: 20px;
+    margin-bottom: 20px;
+    margin-left: 85px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    width: 80%;
+    padding: 8px 12px;
+    border: 2px solid #DDD;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s ease;
+    
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #F6C27B;
+}
+
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E") no-repeat right 12px center;
+    padding-right: 40px;
+}
+
+
+
+/* Upload Section */
+.upload-section {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: -215px;
+    margin-left: 1120px;
+    flex-direction: column;
+}
+
+.upload-section .section-title {
+    flex: 1;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 15px; 
+    margin-left: 0; 
+}
+
+.upload-box {
+    width: 250px;
+    height: 300px;
+    border: 2px dashed #DDD;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 20px;
+}
+
+.upload-box:hover {
+    border-color: #F6C27B;
+    background: rgba(246, 194, 123, 0.05);
+}
+
+.upload-icon {
+    font-size: 48px;
+    color: #460F02;
+    font-weight: 300;
+}
+
+.upload-box p {
+    font-size: 13px;
+    color: #666;
+    margin-top: 8px;
+}
+
+/* Submit Button */
+.submit-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -85px;
+    margin-right: 180px;
+}
+
+.submit-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #F3E5AB;
+    color: #460F02;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(246, 194, 123, 0.3);
+    font-family: 'Poppins', sans-serif; 
+}
+
+.submit-btn:hover {
+    background: #EE8212;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(238, 130, 18, 0.4);
+
+}
+
+.submit-btn ion-icon {
+    font-size: 20px; 
+    color: #460F02;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover ion-icon {
+    color: white; 
+    transform: rotate(360deg); 
+}

@@ -1,0 +1,355 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #ffffff;
+}
+
+
+/* Header */
+.header {
+    background: linear-gradient(to right, #FFF8E7, #F6A33C);
+    padding: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.40);
+    position: relative; 
+    z-index: 10; 
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    margin-top: -16px;
+    height: 100px;
+    width: auto;
+    margin-bottom: -40px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-btn {
+    font-family: 'Poppins', sans-serif;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.3s ease, color 0.3s ease;
+    font-size: 24px;
+    color: #460F02;
+    margin-right: 25px; /* space to the right of each button * adjust the spaces each icons*/
+    position: relative;
+    top: 5px; /* moves the icon down 3px */
+}
+
+.header-btn:hover {
+    transform: scale(1.1);
+    color: #FFFFFF;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 30px;
+}
+
+.dashboard-title {
+    font-size: 32px;
+    color: #460F02;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.dashboard-divider {
+    border: none;
+    border-top: 2px solid #423e3e;
+    margin-bottom: 25px;
+}
+
+/* Application Management Box */
+
+/* Application Management Header Box */
+.app-management-header-box {
+    background: #fff;
+    border-radius: 10px;
+    border: 2px solid #460F02;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 18px 25px 12px 25px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.app-management {
+    background: white;
+    border-radius: 10px;
+    padding: 0 0 25px 0; /* Remove horizontal padding so boxes align to sides */
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    /* border removed to eliminate big border around boxes */
+}
+
+.management-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.management-icon {
+    font-size: 32px;
+    color: #460F02;
+}
+
+.management-title {
+    font-size: 20px;
+    font-weight: 630;
+    color: #460F02;
+}
+
+.management-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 13px;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 15px;
+    margin-bottom: 25px;
+    /* No extra padding so boxes touch container sides */
+}
+
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    border: 2px solid #460F02;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #460F02;
+    font-weight: 500;
+}
+
+.stat-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #460F02;
+    border: 2px solid #460F02;
+    background: white;
+}
+
+.stat-number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #460F02;
+}
+
+/* Search and Filters */
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid #460F02;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    background: #FDF1D7
+}
+
+.search-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 18px;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s;
+}
+
+.filter-dropdown {
+    background: #F6A33C;
+    color: white;
+}
+
+.filter-clear {
+    background: #c9302c;
+    color: white;
+}
+
+.filter-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Table */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #FFF8E7;
+}
+
+th {
+    padding: 12px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #460F02;
+    border-bottom: 2px solid #460F02;
+}
+
+td {
+    padding: 15px 12px;
+    font-size: 13px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+    background: #f9f9f9;
+}
+
+.app-id {
+    font-size: 11px;
+    color: #666;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Actions */
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #460F02;
+    position: relative;
+}
+
+.action-menu {
+    position: absolute;
+    right: 0;
+    top: 30px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 100;
+    min-width: 150px;
+}
+
+.action-menu.active {
+    display: block;
+}
+
+.action-menu-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+    transition: all 0.2s;
+}
+
+.action-menu-item:hover {
+    background: #FFF8E7;
+}
+
+.action-menu-item ion-icon {
+    font-size: 16px;
+}
+
+.actions-cell {
+    position: relative;
+}

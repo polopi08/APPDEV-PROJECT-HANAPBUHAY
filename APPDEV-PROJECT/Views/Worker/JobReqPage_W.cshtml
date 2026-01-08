@@ -1,0 +1,184 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HanapBuhay - Incoming Job Requests</title>
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="~/Styles/JobReqPage_W_styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="~/Images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+
+            <div class="nav-links">
+                <a href="@Url.Action("JobReqPage_W", "Worker")"><button class="home-btn"><ion-icon name="home-outline" class="active"></ion-icon></button></a>
+                <a href="@Url.Action("ChatPage_W", "Worker")"><button class="chat-btn"><ion-icon name="chatbubble-ellipses-outline"></ion-icon></button></a>
+                <a href="@Url.Action("NotifPage_W", "Worker")"><button class="notif-btn"><ion-icon name="notifications-outline"></ion-icon></button></a>
+                <a href="@Url.Action("Profile_W", "Worker")"><button class="person-btn"><ion-icon name="person-outline"></ion-icon></button></a>
+                <a href="@Url.Action("LandingPage", "Home")"><button class="logout-btn"><ion-icon name="log-in-outline"></ion-icon></button></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1>Incoming Job Requests</h1>
+            <p>Clients who want to hire you</p>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Job Requests Grid -->
+        <div class="requests-grid">
+            <!-- Request Card 1 -->
+            <div class="request-card">
+                <div class="card-content">
+                    <div class="profile-image">
+                        <div class="profile-placeholder"></div>
+                    </div>
+                    <div class="card-details">
+                        <div class="client-name">Kyle Bernido</div>
+                        <div class="detail-item">
+                            <ion-icon name="location-outline"></ion-icon>
+                            <span>Pasay City</span>
+                        </div>
+                        <div class="detail-item">
+                            <ion-icon name="build-outline"></ion-icon>
+                            <span>Aircon Repair</span>
+                        </div>
+                        <div class="request-message">
+                            "Need help fixing my aircon this weekend."
+                        </div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-accept">Accept</button>
+                    <button class="btn btn-reject">Reject</button>
+                </div>
+            </div>
+
+            <!-- Request Card 2 -->
+            <div class="request-card">
+                <div class="card-content">
+                    <div class="profile-image">
+                        <div class="profile-placeholder"></div>
+                    </div>
+                    <div class="card-details">
+                        <div class="client-name">Kyle Bernido</div>
+                        <div class="detail-item">
+                            <ion-icon name="location-outline"></ion-icon>
+                            <span>Pasay City</span>
+                        </div>
+                        <div class="detail-item">
+                            <ion-icon name="build-outline"></ion-icon>
+                            <span>Aircon Repair</span>
+                        </div>
+                        <div class="request-message">
+                            "Need help fixing my aircon this weekend."
+                        </div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-accept">Accept</button>
+                    <button class="btn btn-reject">Reject</button>
+                </div>
+            </div>
+
+            <!-- Request Card 3 -->
+            <div class="request-card">
+                <div class="card-content">
+                    <div class="profile-image">
+                        <div class="profile-placeholder"></div>
+                    </div>
+                    <div class="card-details">
+                        <div class="client-name">Kyle Bernido</div>
+                        <div class="detail-item">
+                            <ion-icon name="location-outline"></ion-icon>
+                            <span>Pasay City</span>
+                        </div>
+                        <div class="detail-item">
+                            <ion-icon name="build-outline"></ion-icon>
+                            <span>Aircon Repair</span>
+                        </div>
+                        <div class="request-message">
+                            "Need help fixing my aircon this weekend."
+                        </div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-accept">Accept</button>
+                    <button class="btn btn-reject">Reject</button>
+                </div>
+            </div>
+
+            <!-- Request Card 4 -->
+            <div class="request-card">
+                <div class="card-content">
+                    <div class="profile-image">
+                        <div class="profile-placeholder"></div>
+                    </div>
+                    <div class="card-details">
+                        <div class="client-name">Kyle Bernido</div>
+                        <div class="detail-item">
+                            <ion-icon name="location-outline"></ion-icon>
+                            <span>Pasay City</span>
+                        </div>
+                        <div class="detail-item">
+                            <ion-icon name="build-outline"></ion-icon>
+                            <span>Aircon Repair</span>
+                        </div>
+                        <div class="request-message">
+                            "Need help fixing my aircon this weekend."
+                        </div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-accept">Accept</button>
+                    <button class="btn btn-reject">Reject</button>
+                </div>
+            </div>
+
+            <!-- Request Card 5 -->
+            <div class="request-card">
+                <div class="card-content">
+                    <div class="profile-image">
+                        <div class="profile-placeholder"></div>
+                    </div>
+                    <div class="card-details">
+                        <div class="client-name">Kyle Bernido</div>
+                        <div class="detail-item">
+                            <ion-icon name="location-outline"></ion-icon>
+                            <span>Pasay City</span>
+                        </div>
+                        <div class="detail-item">
+                            <ion-icon name="build-outline"></ion-icon>
+                            <span>Aircon Repair</span>
+                        </div>
+                        <div class="request-message">
+                            "Need help fixing my aircon this weekend."
+                        </div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-accept">Accept</button>
+                    <button class="btn btn-reject">Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

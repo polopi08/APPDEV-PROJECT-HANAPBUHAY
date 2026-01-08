@@ -1,0 +1,279 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Poppins';
+  background-color: #4a4a4a;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  min-height: 100vh;
+}
+
+
+/* Container */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* LEFT PANEL (FORM SIDE) */
+.left-panel {
+  flex: 1;
+  background: linear-gradient(
+    180deg,
+    #FDF2DA 20%,
+    #FCE7BC 60%,
+    #F6A72F 100%
+  );
+  padding: 60px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* REGISTER FORM (MATCHES LOGIN CARD) */
+.signup-form {
+  width: 100%;
+  max-width: 460px;
+  height: 528px; /* added height */
+  background: rgba(255, 255, 255, 0.96);
+  padding: 36px;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+
+.form-header {
+  text-align: center;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.form-header::before,
+.form-header::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 70px;
+  height: 2px;
+  background: rgba(80, 40, 20, 0.9);
+}
+
+.form-header::before { left: 6px; }
+.form-header::after { right: 6px; }
+
+.form-header h2 {
+  font-size: 26px;
+  color: #4a2310;
+  font-weight: 800;
+}
+
+/* FORM FIELDS */
+.form-row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 5px;
+}
+
+.form-group {
+  flex: 1;
+  margin-bottom: 5px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #4a2310;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  font-size: 14px;
+  background: #fff;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #fca45c;
+  box-shadow: 0 6px 18px rgba(244, 162, 97, 0.12);
+}
+
+/* PASSWORD */
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #7a6a61;
+}
+
+/* TERMS */
+.checkbox-group {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: #6b5a51;
+  margin: 10px 0 20px;
+}
+
+.checkbox-group a {
+  color: #4a2b18;
+  text-decoration: underline;
+}
+
+/* BUTTONS */
+.btn-signup {
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  padding: 12px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.btn-signup:hover {
+  background-color: #555;
+}
+
+.divider {
+  text-align: center;
+  margin: 18px 0;
+  color: #6b5a51;
+  position: relative;
+  font-size: 12px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 80px;
+  height: 1px;
+  background: #e7e2dc;
+}
+
+.divider::before { left: 6px; }
+.divider::after { right: 6px; }
+
+.btn-google {
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  padding: 12px;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.btn-google:hover {
+  background-color: #f5f5f5;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* RIGHT PANEL (IMAGE SIDE – MATCH LOGIN IMAGE SIZE) */
+.right-panel {
+    flex: 1;
+    background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    overflow: hidden;
+}
+
+.image-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.918); /* change this later*/
+    border-radius: 8px;
+    padding: 25px;
+    border: 10px;
+}
+
+
+.image-placeholder {
+    text-align: center;
+    color: #666;
+}
+
+
+.collage-image {
+    width: 80px;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 15px;
+}
+
+.welcome-text {
+    text-align: center;
+    max-width: 480px;
+    margin-bottom: 5px;
+    position: relative;
+    top: -63px; /* moves text up */
+}
+
+    .welcome-text h2 {
+        font-size: 31px;
+        color: #5a2d0c;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .welcome-text p {
+        color: #5a2d0c;
+        line-height: 1.3;
+        font-size: 13px;
+    }

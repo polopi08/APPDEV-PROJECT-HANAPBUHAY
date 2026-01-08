@@ -1,0 +1,235 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HanapBuhay - Notifications</title>
+    <link rel="stylesheet" href="~/Styles/NotifPage_W_styles.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="~/Images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+
+            <div class="nav-links">
+                <a href="@Url.Action("JobReqPage_W", "Worker")"><button class="home-btn"><ion-icon name="home-outline"></ion-icon></button></a>
+                <a href="@Url.Action("ChatPage_W", "Worker")"><button class="chat-btn"><ion-icon name="chatbubble-ellipses-outline"></ion-icon></button></a>
+                <a href="@Url.Action("NotifPage_W", "Worker")"><button class="notif-btn"><ion-icon name="notifications-outline" class="active"></ion-icon></button></a>
+                <a href="@Url.Action("Profile_W", "Worker")"><button class="person-btn"><ion-icon name="person-outline"></ion-icon></button></a>
+                <a href="@Url.Action("LandingPage", "Home")"><button class="logout-btn"><ion-icon name="log-in-outline"></ion-icon></button></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notifications Container -->
+    <div class="notifications-container">
+        <!-- Left Side - Notifications List -->
+        <div class="notifications-main">
+            <h1 class="page-title">Notifications</h1>
+
+            <div class="notifications-filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Unread</button>
+                <button class="filter-btn">System</button>
+                <button class="sort-btn">
+                    <ion-icon name="funnel-outline"></ion-icon>
+                    Newest
+                </button>
+            </div>
+
+            <div class="notifications-list">
+                <div class="notification-item" data-type="worker-accepted" data-read="false" data-timestamp="120">
+                    <div class="notification-icon" style="background: #FFE5B4;">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <strong>Kyle Bernido</strong> accepted your booking request.
+                        </div>
+                        <div class="notification-time">2 mins ago</div>
+                    </div>
+                </div>
+
+                <div class="notification-item" data-type="message" data-read="false" data-timestamp="600">
+                    <div class="notification-icon" style="background: #FFE5B4;">
+                        <ion-icon name="chatbubble-outline"></ion-icon>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <strong>Vivian Yambao</strong> sent you a message.
+                        </div>
+                        <div class="notification-time">10 mins ago</div>
+                    </div>
+                </div>
+
+                <div class="notification-item" data-type="review" data-read="true" data-timestamp="14400">
+                    <div class="notification-icon" style="background: #FFE5B4;">
+                        <ion-icon name="star-outline"></ion-icon>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <strong>Viaani Ubalde</strong> completed the service. Leave a review.
+                        </div>
+                        <div class="notification-time">4 hrs ago</div>
+                    </div>
+                </div>
+
+                <div class="notification-item" data-type="system" data-read="true" data-timestamp="86400">
+                    <div class="notification-icon" style="background: #FFE5B4;">
+                        <ion-icon name="megaphone-outline"></ion-icon>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <strong>System:</strong> New workers added matching your search
+                        </div>
+                        <div class="notification-time">Yesterday</div>
+                    </div>
+                </div>
+
+                <div class="notification-item" data-type="booking-cancelled" data-read="true" data-timestamp="172800">
+                    <div class="notification-icon" style="background: #FFFF99;">
+                        <ion-icon name="close-circle-outline"></ion-icon>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <strong>Giselle Valdez</strong> cancelled the booking.
+                        </div>
+                        <div class="notification-time">2 days ago</div>
+                    </div>
+                </div>
+
+                <div class="notification-item" data-type="system" data-read="true" data-timestamp="259200">
+                    <div class="notification-icon" style="background: #FFE5B4;">
+                        <ion-icon name="alert-circle-outline"></ion-icon>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <strong>System:</strong> Complete your profile for better matches
+                        </div>
+                        <div class="notification-time">3 days ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Booking Info -->
+        <div class="service-sidebar">
+            <div class="service-card">
+                <div class="service-card-header">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <h3>Active Bookings</h3>
+                </div>
+                <div class="service-card-content">
+                    <p>• 1 Active Booking</p>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Kyle Bernido - Carpenter</p>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-card-header">
+                    <ion-icon name="time-outline"></ion-icon>
+                    <h3>Booking History</h3>
+                </div>
+                <div class="service-card-content">
+                    <div class="service-stat">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Total Bookings</span>
+                    </div>
+                    <div class="service-stat">
+                        <span class="stat-number">1</span>
+                        <span class="stat-label">Active Bookings</span>
+                    </div>
+                    <div class="service-stat">
+                        <span class="stat-number">11</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const sortBtn = document.querySelector('.sort-btn');
+        const notificationItems = document.querySelectorAll('.notification-item');
+        let currentFilter = 'all';
+        let sortOrder = 'newest';
+
+        // Filter functionality
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all filter buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Get filter type
+                currentFilter = this.textContent.toLowerCase();
+                applyFilters();
+            });
+        });
+
+        // Sort functionality
+        sortBtn.addEventListener('click', function() {
+            sortOrder = sortOrder === 'newest' ? 'oldest' : 'newest';
+            const icon = sortBtn.querySelector('ion-icon');
+            icon.setAttribute('name', sortOrder === 'newest' ? 'caret-up-outline' : 'caret-down-outline');
+            sortBtn.innerHTML = `<ion-icon name="${sortOrder === 'newest' ? 'caret-up-outline' : 'caret-down-outline'}"></ion-icon> ${sortOrder.charAt(0).toUpperCase() + sortOrder.slice(1)}`;
+            applyFilters();
+        });
+
+        // Apply filters and sorting
+        function applyFilters() {
+            let visibleItems = [];
+
+            notificationItems.forEach(item => {
+                let show = false;
+                const type = item.getAttribute('data-type');
+                const isRead = item.getAttribute('data-read') === 'true';
+
+                if (currentFilter === 'all') {
+                    show = true;
+                } else if (currentFilter === 'unread') {
+                    show = !isRead;
+                } else if (currentFilter === 'system') {
+                    show = type === 'system';
+                }
+
+                if (show) {
+                    item.style.display = 'flex';
+                    visibleItems.push(item);
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Sort visible items
+            visibleItems.sort((a, b) => {
+                const timestampA = parseInt(a.getAttribute('data-timestamp'));
+                const timestampB = parseInt(b.getAttribute('data-timestamp'));
+
+                if (sortOrder === 'newest') {
+                    return timestampA - timestampB;
+                } else {
+                    return timestampB - timestampA;
+                }
+            });
+
+            // Reorder items in DOM
+            const notificationsList = document.querySelector('.notifications-list');
+            visibleItems.forEach(item => {
+                notificationsList.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>

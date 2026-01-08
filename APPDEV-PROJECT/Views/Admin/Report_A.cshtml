@@ -1,0 +1,117 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HanapBuhay - Report Details</title>
+    <link rel="stylesheet" href="~/Styles/Report_A_styles.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="~/images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+
+            <div class="header-buttons">
+                <a href="@Url.Action("DashboardPage_A", "Admin")" class="header-btn">
+                    <ion-icon name="home-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("AppMan_A", "Admin")" class="header-btn">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("Report_A", "Admin")" class="header-btn active">
+                    <ion-icon name="warning-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("LandingPage", "Home")" class="header-btn">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <h1 class="page-title">Report Details</h1>
+        <p class="page-subtitle">View and Manage Content and Behavior Reports</p>
+
+        <div class="report-card">
+            <div class="report-content">
+                <div class="report-meta">
+                    <div class="report-id">#2023-**********1</div>
+                    <div class="report-tags">
+                        <span class="report-type">Scammer, Misinformation</span>
+                        <span class="status-badge">⏱ Pending</span>
+                    </div>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-title">Initial Description:</div>
+                    <p class="section-text">
+                        A client hired "Worker A" on Sept 20, 2025 for home repair services and paid an advance of ₱3,000. The worker confirmed the job and scheduled the service for Sept 23, 2025, but failed to show up. Despite repeated follow-ups, the worker gave excuses and eventually stopped responding.
+                    </p>
+                </div>
+
+                <div class="people-section">
+                    <h3>People Involved:</h3>
+                    <div class="people-grid">
+                        <div class="person-card">
+                            <span class="person-badge reporter">Reporter</span>
+                            <div class="person-icon"><ion-icon name="person-circle"></ion-icon></div>
+                            <div class="person-name">Emma Wilson</div>
+                            <div class="person-email">emmawilson@gmail.com</div>
+                            <div class="person-role">Role: Client</div>
+                        </div>
+                        <div class="person-card">
+                            <span class="person-badge reported">Reported Person</span>
+                            <div class="person-icon"><ion-icon name="person-circle"></ion-icon></div>
+                            <div class="person-name">Emma Wattson</div>
+                            <div class="person-email">emmawattson@gmail.com</div>
+                            <div class="person-role">Role: Skilled Worker</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-info-grid">
+                    <div class="info-item">
+                        <div class="info-label"><ion-icon name="calendar-outline"></ion-icon> Date</div>
+                        <div class="info-value">September 20, 2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><ion-icon name="time-outline"></ion-icon> Time</div>
+                        <div class="info-value">05:51:00 pm</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><ion-icon name="bookmark-outline"></ion-icon> Report ID</div>
+                        <div class="info-value">ARC-100000001</div>
+                    </div>
+                </div>
+
+                <div class="details-box">
+                    <h4>Details Information</h4>
+                    <div class="detail-row">
+                        <strong>Impact:</strong> Client lost advance payment, services remain unfinished, and trust in independent workers was affected.
+                    </div>
+                    <div class="detail-row">
+                        <strong>Action Taken:</strong> Incident reported to platform/group admins. Client advised to escalate to local authorities.
+                    </div>
+                    <div class="detail-row">
+                        <strong>Recommendation:</strong> Avoid full upfront payments, require receipts or contracts, and verify worker credentials before hiring.
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-close">Close Details</button>
+                    <button class="btn btn-delete">Delete Report</button>
+                    <button class="btn btn-download">Download Report</button>
+                    <button class="btn btn-resolve">Mark as Resolved</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

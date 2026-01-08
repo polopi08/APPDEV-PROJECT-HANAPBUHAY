@@ -1,0 +1,114 @@
+@{
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/Styles/registerPage_styles.css">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HanapBuhay - Create Account</title>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel - Create Account Form -->
+        <div class="left-panel">
+            <div class="signup-form">
+                <div class="form-header">
+                    <h2>Create Account</h2>
+                </div>
+
+                <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstname">First Name</label>
+                            <input type="text" id="firstname" name="firstname" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input type="text" id="lastname" name="lastname" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="password" name="password" required>
+                            <span class="password-toggle" id="togglePassword">👁</span>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">
+                            I agree to the <a href="#">terms of service</a> and <a href="#">privacy policy</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-signup">Sign Up</button>
+
+                    <div class="divider">or sign up with</div>
+
+                    <button type="button" class="btn-google">
+                        <img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
+                        Continue with Google
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Panel - Welcome Section -->
+        <div class="right-panel">
+
+
+            <div class="image-container">
+                <div class="image-placeholder">
+                    <img src="~/Images/register.png" alt="Register collage" class="register-image">
+                </div>
+            </div>
+
+            <div class="welcome-text">
+                <h2>Join HanapBuhay Today</h2>
+                <p>Sign up today to join a platform built on trust, skill, and opportunity. Together, workers and clients create lasting connections that strengthen our communities.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("password");
+
+        togglePassword.addEventListener("click", () => {
+            const isPassword = passwordInput.type === "password";
+
+            passwordInput.type = isPassword ? "text" : "password";
+            togglePassword.textContent = isPassword ? "👁" : "👁";
+        });
+
+        function handleRegisterSubmit(event) {
+            event.preventDefault();
+            
+            const userRole = sessionStorage.getItem('userRole');
+            
+            // Simulate successful registration (replace with actual registration logic)
+            if (userRole === 'client') {
+                window.location.href = '@Url.Action("InfoPage_C", "Client")';
+            } else if (userRole === 'worker') {
+                window.location.href = '@Url.Action("InfoPage_W", "Worker")';
+            } else {
+                // Default to landing page if no role is set
+                window.location.href = '@Url.Action("LandingPage", "Home")';
+            }
+        }
+    </script>
+
+</body>
+</html>

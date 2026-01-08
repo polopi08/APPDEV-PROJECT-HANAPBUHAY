@@ -1,0 +1,292 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HanapBuhay - Admin Dashboard</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/Styles/AppMan_A_styles.css">
+     
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="~/images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="header-buttons">
+                <a href="@Url.Action("DashboardPage_A", "Admin")" class="header-btn">
+                    <ion-icon name="home-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("Report_A", "Admin")" class="header-btn">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("AppMan_A", "Admin")" class="header-btn">
+                    <ion-icon name="warning-outline"></ion-icon>
+                </a>
+                <a href="@Url.Action("LandingPage", "Home")" class="header-btn">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">Admin Dashboard</h1>
+        <hr class="dashboard-divider">
+
+        <!-- Application Management Header Box -->
+        <div class="app-management-header-box">
+            <div class="management-header">
+                <ion-icon name="bar-chart" class="management-icon"></ion-icon>
+                <span class="management-title">Application Management</span>
+            </div>
+            <div class="management-subtitle">
+                Overall application statistics and completion tracking
+            </div>
+        </div>
+
+        <div class="app-management">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Approved Request</span>
+                        <div class="stat-icon"><ion-icon name="checkmark-outline"></ion-icon></div>
+                    </div>
+                    <div class="stat-number">18</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Pending Request</span>
+                        <div class="stat-icon"><ion-icon name="time-outline"></ion-icon></div>
+                    </div>
+                    <div class="stat-number">10</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Rejected Request</span>
+                        <div class="stat-icon"><ion-icon name="close-outline"></ion-icon></div>
+                    </div>
+                    <div class="stat-number">10</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Reports</span>
+                        <div class="stat-icon"><ion-icon name="warning-outline"></ion-icon></div>
+                    </div>
+                    <div class="stat-number">3</div>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-section">
+                <div class="search-wrapper">
+                    <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                    <input type="text" class="search-input" placeholder="Search by name or application id">
+                </div>
+                <div class="filters">
+                    <button class="filter-btn filter-dropdown">All Statuses ▼</button>
+                    <button class="filter-btn filter-clear">Clear Filters</button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Applicant Name</th>
+                            <th>Application Type</th>
+                            <th>Submission Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <!-- ROW 1 -->
+                        <tr data-status="Pending" data-name="John Doe" data-appid="#APP-0000001">
+                            <td>
+                                <div>John Doe</div>
+                                <div class="app-id">APP_ID: #APP-0000001</div>
+                            </td>
+                            <td>New</td>
+                            <td>09-30-2025</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn" onclick="toggleMenu(this)">
+                                    <ion-icon name="ellipsis-vertical"></ion-icon>
+                                </button>
+                                <div class="action-menu">
+                                    <a href="@Url.Action("ViewDetails_A", "Admin")" class="action-menu-item">
+                                        <ion-icon name="eye-outline"></ion-icon>
+                                        <span>View Details</span>
+                                    </a>
+                                    <div class="action-menu-item">
+                                        <ion-icon name="create-outline"></ion-icon>
+                                        <span>Actions</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- ROW 2 -->
+                        <tr data-status="Approved" data-name="Jane Smith" data-appid="#APP-0000002">
+                            <td>
+                                <div>Jane Smith</div>
+                                <div class="app-id">APP_ID: #APP-0000002</div>
+                            </td>
+                            <td>Renewal</td>
+                            <td>10-01-2025</td>
+                            <td><span class="status-badge status-approved">Approved</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn" onclick="toggleMenu(this)">
+                                    <ion-icon name="ellipsis-vertical"></ion-icon>
+                                </button>
+                                <div class="action-menu">
+                                    <a href="@Url.Action("ViewDetails_A", "Admin")" class="action-menu-item">
+                                        <ion-icon name="eye-outline"></ion-icon>
+                                        <span>View Details</span>
+                                    </a>
+                                    <div class="action-menu-item">
+                                        <ion-icon name="create-outline"></ion-icon>
+                                        <span>Actions</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- ROW 3 -->
+                        <tr data-status="Rejected" data-name="Carlos Reyes" data-appid="#APP-0000003">
+                            <td>
+                                <div>Carlos Reyes</div>
+                                <div class="app-id">APP_ID: #APP-0000003</div>
+                            </td>
+                            <td>New</td>
+                            <td>10-02-2025</td>
+                            <td><span class="status-badge status-rejected">Rejected</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn" onclick="toggleMenu(this)">
+                                    <ion-icon name="ellipsis-vertical"></ion-icon>
+                                </button>
+                                <div class="action-menu">
+                                    <a href="@Url.Action("ViewDetails_A", "Admin")" class="action-menu-item">
+                                        <ion-icon name="eye-outline"></ion-icon>
+                                        <span>View Details</span>
+                                    </a>
+                                    <div class="action-menu-item">
+                                        <ion-icon name="create-outline"></ion-icon>
+                                        <span>Actions</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- ROW 4 -->
+                        <tr data-status="Pending" data-name="Maria Garcia" data-appid="#APP-0000004">
+                            <td>
+                                <div>Maria Garcia</div>
+                                <div class="app-id">APP_ID: #APP-0000004</div>
+                            </td>
+                            <td>Renewal</td>
+                            <td>10-03-2025</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td class="actions-cell">
+                                <button class="action-btn" onclick="toggleMenu(this)">
+                                    <ion-icon name="ellipsis-vertical"></ion-icon>
+                                </button>
+                                <div class="action-menu">
+                                    <a href="@Url.Action("ViewDetails_A", "Admin")" class="action-menu-item">
+                                        <ion-icon name="eye-outline"></ion-icon>
+                                        <span>View Details</span>
+                                    </a>
+                                    <div class="action-menu-item">
+                                        <ion-icon name="create-outline"></ion-icon>
+                                        <span>Actions</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script>
+        function toggleMenu(button) {
+            document.querySelectorAll('.action-menu').forEach(menu => {
+                if (menu !== button.nextElementSibling) {
+                    menu.classList.remove('active');
+                }
+            });
+            button.nextElementSibling.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.action-btn')) {
+                document.querySelectorAll('.action-menu').forEach(menu => {
+                    menu.classList.remove('active');
+                });
+            }
+        });
+
+        // Filter functionality
+        const statusFilterBtn = document.querySelectorAll('.filter-dropdown')[0];
+        const clearFilterBtn = document.querySelector('.filter-clear');
+        const searchInput = document.querySelector('.search-input');
+        const tableRows = document.querySelectorAll('tbody tr');
+
+        let currentStatus = 'All';
+        statusFilterBtn.addEventListener('click', function() {
+            const statuses = ['All', 'Pending', 'Approved', 'Rejected'];
+            let next = statuses.indexOf(currentStatus) + 1;
+            if (next >= statuses.length) next = 0;
+            currentStatus = statuses[next];
+            statusFilterBtn.textContent = currentStatus + ' Statuses ▼';
+            filterRows();
+        });
+
+        searchInput.addEventListener('input', filterRows);
+        clearFilterBtn.addEventListener('click', function() {
+            currentStatus = 'All';
+            statusFilterBtn.textContent = 'All Statuses ▼';
+            searchInput.value = '';
+            filterRows();
+        });
+
+        function filterRows() {
+            const search = searchInput.value.toLowerCase();
+            tableRows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                const name = row.getAttribute('data-name').toLowerCase();
+                const appid = row.getAttribute('data-appid').toLowerCase();
+                let show = true;
+                if (currentStatus !== 'All' && status !== currentStatus) show = false;
+                if (search && !name.includes(search) && !appid.includes(search)) show = false;
+                row.style.display = show ? '' : 'none';
+            });
+        }
+    </script>
+
+</body>
+</html>
