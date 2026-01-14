@@ -51,19 +51,32 @@
             </div>
             <div class="search-filter">
                 <div class="search-box">
-                    <input type="text" placeholder="Search services...">
+                    <input type="text" id="search-input" placeholder="Search services...">
                     <ion-icon name="search-outline"></ion-icon>
                 </div>
                 <div class="location-box">
                     <ion-icon name="location-outline"></ion-icon>
-                    <input type="text" placeholder="Enter location...">
+                    <select id="location-input" class="location-dropdown">
+                        <option value="">Select a location...</option>
+                        <option value="San Juan Greenhills">San Juan Greenhills</option>
+                        <option value="San Juan Addition Hills">San Juan Addition Hills</option>
+                        <option value="Corazon de Jesus">Corazon de Jesus</option>
+                        <option value="West Crame">West Crame</option>
+                        <option value="West Greenhills">West Greenhills</option>
+                        <option value="San Juan Pinaglabanan">San Juan Pinaglabanan</option>
+                        <option value="Balong-Bato">Balong-Bato</option>
+                        <option value="F. Manalo">F. Manalo</option>
+                        <option value="San Juan del Monte">San Juan del Monte</option>
+                    </select>
                 </div>
-                <button class="find-workers-btn">Find Workers Around You</button>
-                <select class="filter-dropdown">
+                <button id="geo-btn" class="find-workers-btn">Find Workers Around You</button>
+                <select id="filter-dropdown" class="filter-dropdown">
                     <option value="">Filter</option>
-                    <option value="cook">Cook</option>
-                    <option value="carpenter">Carpenter</option>
-                    <option value="electrician">Electrician</option>
+                    <option value="Cook">Cook</option>
+                    <option value="Carpenter">Carpenter</option>
+                    <option value="Electrician">Electrician</option>
+                    <option value="Technician">Technician</option>
+                    <option value="Plumber">Plumber</option>
                 </select>
             </div>
         </div>
@@ -71,114 +84,169 @@
         <hr class="section-divider">
 
         <!-- Workers Grid -->
-        <div class="workers-grid">
-            <div class="worker-card">
-                <div class="worker-header">
-                    <div class="worker-name">Kyle Bernido</div>
-                    <span class="worker-distance">0.06km away</span>
-                </div>
-                <div class="worker-image">Profile Image</div>
-                <div class="worker-job">Carpenter</div>
-                <div class="rating">
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                </div>
-                <button class="view-details-btn">View Details</button>
-            </div>
-
-            <div class="worker-card">
-                <div class="worker-header">
-                    <div class="worker-name">Vivian Yambao</div>
-                    <span class="worker-distance">0.06km away</span>
-                </div>
-                <div class="worker-image">Profile Image</div>
-                <div class="worker-job">Cook</div>
-                <div class="rating">
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                </div>
-                <button class="view-details-btn">View Details</button>
-            </div>
-
-            <div class="worker-card">
-                <div class="worker-header">
-                    <div class="worker-name">Viaani Ubalde</div>
-                    <span class="worker-distance">0.06km away</span>
-                </div>
-                <div class="worker-image">Profile Image</div>
-                <div class="worker-job">Electrician</div>
-                <div class="rating">
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                </div>
-                <button class="view-details-btn">View Details</button>
-            </div>
-
-            <div class="worker-card">
-                <div class="worker-header">
-                    <div class="worker-name">Kyle Bernido</div>
-                    <span class="worker-distance">0.06km away</span>
-                </div>
-                <div class="worker-image">Profile Image</div>
-                <div class="worker-job">Technician</div>
-                <div class="rating">
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                </div>
-                <button class="view-details-btn">View Details</button>
-            </div>
-
-            <div class="worker-card">
-                <div class="worker-header">
-                    <div class="worker-name">Giselle Valdez</div>
-                    <span class="worker-distance">0.06km away</span>
-                </div>
-                <div class="worker-image">Profile Image</div>
-                <div class="worker-job">Plumber</div>
-                <div class="rating">
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                </div>
-                <button class="view-details-btn">View Details</button>
-            </div>
-
-            <div class="worker-card">
-                <div class="worker-header">
-                    <div class="worker-name">Sophia Cutue</div>
-                    <span class="worker-distance">0.06km away</span>
-                </div>
-                <div class="worker-image">Profile Image</div>
-                <div class="worker-job">Plumber</div>
-                <div class="rating">
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                    <span class="star"><ion-icon name="star"></ion-icon></span>
-                </div>
-                <button class="view-details-btn">View Details</button>
-            </div>
-
-            <!-- <div class="workers-grid" id="workers-grid">
-                 //Worker cards will be inserted here by JS //
-            </div> then yung nasa taas na yan, dedma na sya-->
-            <!-- Additional worker cards... (keep all existing as is) -->
+        <div class="workers-grid" id="workers-grid">
+            <!-- Worker cards will be inserted here by JavaScript -->
         </div>
     </div>
+
+    <script>
+        const sanJuanCenter = { Lat: 14.604432, Lng: 121.029950 };
+
+        const locationCoordinates = {
+            "San Juan Greenhills": { lat: 14.602981736177803, lng: 121.04488737237482 },
+            "San Juan Addition Hills": { lat: 14.593957651465185, lng: 121.03816375432932 },
+            "Corazon de Jesus": { lat: 14.606833931096597, lng: 121.03067168045362 },
+            "West Crame": { lat: 14.607717930795932, lng: 121.04981118308083 },
+            "West Greenhills": { lat: 14.598770424566561, lng: 121.04580245503976 },
+            "San Juan Pinaglabanan": { lat: 14.605104730989897, lng: 121.0288131464939 },
+            "Balong-Bato": { lat: 14.609072024777793, lng: 121.02585726853202 },
+            "F. Manalo": { lat: 14.598387248539703, lng: 121.02525322515011 },
+            "San Juan del Monte": { lat: 14.59865706629644, lng: 121.03040301434575 }
+        };
+
+        let currentLocationName = "San Juan Center";
+
+        function updateLocationBadge(locationName) {
+            const badge = document.getElementById("location-badge");
+            if(badge) {
+                badge.textContent = locationName;
+                badge.style.display = "block";
+            }
+        }
+
+        function fetchWorkers(lat, lng) {
+            const grid = document.getElementById("workers-grid");
+            grid.innerHTML = '<div class="loading-message">Loading workers near you...</div>';
+
+            const skillFilter = document.getElementById("filter-dropdown").value;
+            const searchQuery = document.getElementById("search-input").value;
+
+            fetch(`/api/workers/nearby?lat=${lat}&lng=${lng}&skill=${skillFilter}&search=${searchQuery}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(workers => {
+                    grid.innerHTML = "";
+                    if(!workers || workers.length === 0){
+                        grid.innerHTML = '<div class="no-workers-message">No workers found nearby.</div>';
+                        return;
+                    }
+
+                    workers.forEach(worker => {
+                        const card = document.createElement("div");
+                        card.classList.add("worker-card");
+                        card.innerHTML = `
+                            <div class="worker-header">
+                                <div class="worker-name">${worker.Name}</div>
+                                <span class="worker-distance">${parseFloat(worker.DistanceKm).toFixed(2)}km away</span>
+                            </div>
+                            <div class="worker-image">Profile Image</div>
+                            <div class="worker-job">${worker.Skill}</div>
+                            <div class="rating">
+                                <span class="star"><ion-icon name="star"></ion-icon></span>
+                                <span class="star"><ion-icon name="star"></ion-icon></span>
+                                <span class="star"><ion-icon name="star"></ion-icon></span>
+                                <span class="star"><ion-icon name="star"></ion-icon></span>
+                                <span class="star"><ion-icon name="star"></ion-icon></span>
+                            </div>
+                            <button class="view-details-btn" onclick="viewWorkerDetails(${worker.Id})">View Details</button>
+                        `;
+                        grid.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    grid.innerHTML = '<div class="error-message">Error loading workers. Please try again.</div>';
+                });
+        }
+
+        function viewWorkerDetails(workerId){
+            window.location.href = `/Client/InfoPage_C?workerId=${workerId}`;
+        }
+
+        // Geolocation button
+        const geoBtn = document.getElementById("geo-btn");
+        if(geoBtn) {
+            geoBtn.addEventListener("click", function() {
+                const btn = this;
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<ion-icon name="hourglass-outline"></ion-icon> Loading...';
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            currentLocationName = "Your Location";
+                            updateLocationBadge(currentLocationName);
+                            fetchWorkers(pos.coords.latitude, pos.coords.longitude);
+                            btn.innerHTML = originalHTML;
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                        },
+                        () => {
+                            alert("Unable to get location. Showing San Juan center.");
+                            currentLocationName = "San Juan Center";
+                            updateLocationBadge(currentLocationName);
+                            fetchWorkers(sanJuanCenter.Lat, sanJuanCenter.Lng);
+                            btn.innerHTML = originalHTML;
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                        }
+                    );
+                } else {
+                    alert("Geolocation not supported. Showing San Juan center.");
+                    currentLocationName = "San Juan Center";
+                    updateLocationBadge(currentLocationName);
+                    fetchWorkers(sanJuanCenter.Lat, sanJuanCenter.Lng);
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                }
+            });
+        }
+
+        // Location selection handling
+        const locationInput = document.getElementById("location-input");
+        let isProcessing = false;
+
+        if(locationInput) {
+            locationInput.addEventListener("change", function() {
+                if(isProcessing) return;
+                const selectedLocation = this.value;
+                
+                if(selectedLocation && selectedLocation !== ""){
+                    isProcessing = true;
+                    currentLocationName = selectedLocation;
+                    updateLocationBadge(currentLocationName);
+                    fetchWorkers(locationCoordinates[selectedLocation].lat, locationCoordinates[selectedLocation].lng);
+                    isProcessing = false;
+                }
+            });
+        }
+
+        // Search by skill
+        const searchInput = document.getElementById("search-input");
+        if(searchInput) {
+            searchInput.addEventListener("input", function() {
+                fetchWorkers(sanJuanCenter.Lat, sanJuanCenter.Lng);
+            });
+        }
+
+        // Filter dropdown
+        const filterDropdown = document.getElementById("filter-dropdown");
+        if(filterDropdown) {
+            filterDropdown.addEventListener("change", function() {
+                fetchWorkers(sanJuanCenter.Lat, sanJuanCenter.Lng);
+            });
+        }
+
+        // Initial load
+        updateLocationBadge(currentLocationName);
+        fetchWorkers(sanJuanCenter.Lat, sanJuanCenter.Lng);
+    </script>
 </body>
 </html>
