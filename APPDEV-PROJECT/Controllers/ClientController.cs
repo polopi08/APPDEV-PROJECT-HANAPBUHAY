@@ -31,6 +31,65 @@ namespace APPDEV_PROJECT.Controllers
             }
         }
 
+/* changes, this is for messaging*/
+        [HttpGet]
+        [Route("api/messages/conversations")]
+        public IActionResult GetConversations(string search = "")
+        {
+            try
+            {
+                var conversations = string.IsNullOrEmpty(search) 
+                    ? MessageHelper.GetConversations()
+                    : MessageHelper.SearchConversations(search);
+                return Json(conversations);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("api/messages/{conversationId}")]
+        public IActionResult GetMessages(int conversationId)
+        {
+            try
+            {
+                var messages = MessageHelper.GetMessages(conversationId);
+                return Json(messages);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Route("api/messages/send")]
+        public IActionResult SendMessage([FromBody] SendMessageRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request.Content))
+                    return BadRequest(new { error = "Message content cannot be empty" });
+
+                var message = MessageHelper.SendMessage(request.ConversationId, request.Content);
+                return Json(message);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        public class SendMessageRequest
+        {
+            public int ConversationId { get; set; }
+            public string Content { get; set; }
+        }
+
+/* hanggang dito */
+
         public IActionResult SearchPage_C()
         {
             return View();
