@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f9f7f4;
+}
+
+/* ===============================
+   Header Styles
+=============================== */
+.header {
+    background: linear-gradient(to right, #FFF8E7, #F6A33C);
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 10;
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    margin-top: -16px;
+    height: 100px;
+    width: auto;
+    margin-bottom: -40px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-btn {
+    font-family: 'Poppins', sans-serif;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.3s ease, color 0.3s ease;
+    font-size: 24px;
+    color: #460F02;
+    margin-right: 25px;
+    position: relative;
+    top: 5px;
+}
+
+.header-btn:hover {
+    transform: scale(1.1);
+    color: #FFFFFF;
+}
+
+.header-btn.active {
+    color: #FFFFFF;
+    transform: scale(1.15);
+}
+
+.logout-btn ion-icon {
+    font-size: 28px;
+}
+
+/* ===============================
+   Main Wrapper
+=============================== */
+.main-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* ===============================
+   Profile Main Content
+=============================== */
+.profile-main {
+    background: #fff;
+    border-radius: 10px;
+    padding: 35px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-main h2 {
+    font-size: 20px;
+    color: #460F02;
+    margin-bottom: 28px;
+    font-weight: 600;
+    border-bottom: 1px solid #e0d9d0;
+    padding-bottom: 12px;
+}
+
+/* ===============================
+   Forms
+=============================== */
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.form-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.form-section h3 {
+    grid-column: 1 / -1;
+    font-size: 15px;
+    color: #460F02;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0ebe5;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #460F02;
+    margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    font-family: 'Poppins', sans-serif;
+    padding: 11px 14px;
+    border: 1px solid #e0d9d0;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.2s ease;
+    background: #faf8f5;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #bfa08e;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(191, 160, 142, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+/* ===============================
+   Buttons
+=============================== */
+.btn-save {
+    padding: 11px 28px;
+    background: #bfa08e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    max-width: fit-content;
+    margin-top: 15px;
+}
+
+.btn-save:hover {
+    background: #a88a75;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(191, 160, 142, 0.2);
+}
+
+/* ===============================
+   Responsive Styles
+=============================== */
+@media (max-width: 968px) {
+    .form-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-main {
+        padding: 20px;
+    }
+
+    .form-section {
+        grid-template-columns: 1fr;
+    }
+}

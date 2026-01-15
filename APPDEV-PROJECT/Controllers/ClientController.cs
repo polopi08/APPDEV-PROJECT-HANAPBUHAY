@@ -117,7 +117,7 @@ namespace APPDEV_PROJECT.Controllers
 
         public IActionResult Profile()
         {
-            return View();
+            return View("ProfilePage_C");
         }
     }
 }

@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using APPDEV_PROJECT.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddDbContext<HanapBuhayDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ClientSide")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews()
