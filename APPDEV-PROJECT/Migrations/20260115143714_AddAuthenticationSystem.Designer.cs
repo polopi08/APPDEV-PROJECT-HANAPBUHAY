@@ -4,6 +4,7 @@ using APPDEV_PROJECT.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APPDEV_PROJECT.Migrations
 {
     [DbContext(typeof(HanapBuhayDBContext))]
-    partial class HanapBuhayDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260115143714_AddAuthenticationSystem")]
+    partial class AddAuthenticationSystem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,63 +105,6 @@ namespace APPDEV_PROJECT.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("APPDEV_PROJECT.Models.Entities.Worker", b =>
-                {
-                    b.Property<Guid>("WorkerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Accomplishments")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Mname")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Sex")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Skill")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("YearsOfExperience")
-                        .HasColumnType("int");
-
-                    b.HasKey("WorkerId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Workers");
-                });
-
             modelBuilder.Entity("APPDEV_PROJECT.Models.Entities.Client", b =>
                 {
                     b.HasOne("APPDEV_PROJECT.Models.Entities.User", "User")
@@ -170,22 +116,9 @@ namespace APPDEV_PROJECT.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("APPDEV_PROJECT.Models.Entities.Worker", b =>
-                {
-                    b.HasOne("APPDEV_PROJECT.Models.Entities.User", "User")
-                        .WithOne("Worker")
-                        .HasForeignKey("APPDEV_PROJECT.Models.Entities.Worker", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("APPDEV_PROJECT.Models.Entities.User", b =>
                 {
                     b.Navigation("Client");
-
-                    b.Navigation("Worker");
                 });
 #pragma warning restore 612, 618
         }

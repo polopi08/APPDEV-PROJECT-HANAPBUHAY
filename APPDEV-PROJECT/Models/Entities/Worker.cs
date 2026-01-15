@@ -1,23 +1,20 @@
-﻿// this is where were going to declare the properties that will represent the entities that we will be having
-
 namespace APPDEV_PROJECT.Models.Entities
 {
-    public class Client
+    public class Worker
     {
-        public Guid ClientId { get; set; }
+        public Guid WorkerId { get; set; }
 
-        // ===== NEW: Foreign key to link Client to User account =====
+        // ===== NEW: Foreign key to link Worker to User account =====
         // This connects the profile to the authentication user
         public Guid UserId { get; set; }
 
         public string LName { get; set; }
 
         public string FName { get; set; }
+
         public string Mname { get; set; }
 
         public string Email { get; set; }
-
-       // public string PasswordHash { get; set; } = string.Empty;
 
         public DateTime DateOfBirth { get; set; }
 
@@ -27,10 +24,17 @@ namespace APPDEV_PROJECT.Models.Entities
 
         public string Address { get; set; }
 
+        // ===== Work Background Information =====
+        public string Skill { get; set; }
+
+        public int YearsOfExperience { get; set; }
+
+        public string Accomplishments { get; set; }
+
         public string FullName => $"{FName} {LName}";
 
         // ===== NEW: Navigation property to access the User account =====
-        // This allows you to access user info from client (e.g., client.User.Email)
+        // This allows you to access user info from worker (e.g., worker.User.Email)
         public User? User { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+@model APPDEV_PROJECT.Models.LoginViewModel
 @{
     Layout = null;
 }
@@ -17,8 +18,6 @@
     <div class="container">
         <!-- Left Panel -->
         <div class="left-panel">
-
-
             <!-- Add your image here -->
             <div class="login-image-wrapper">
                 <img src="~/Images/login.png" alt="Login collage" class="login-image">
@@ -35,10 +34,20 @@
             <div class="login-form">
                 <h2>Log In</h2>
 
-                <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+                <form method="post" action="@Url.Action("Login", "Account")">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div style="color: red; margin-bottom: 15px;">
+                            @Html.ValidationSummary(true)
+                        </div>
+                    }
+
+                    <!-- Hidden userType field - populated from sessionStorage -->
+                    <input type="hidden" id="userType" name="userType">
+
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="@Model?.Email" required>
                     </div>
 
                     <div class="form-group">
@@ -56,11 +65,6 @@
 
                     <button type="submit" class="btn-login">Log In</button>
 
-                    <button type="button" class="btn-google">
-                        <img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
-                        Continue with Google
-                    </button>
-
                     <p class="register-link">
                         Don't have an account? <a href="@Url.Action("RegisterPage", "Account")">Register</a>
                     </p>
@@ -70,23 +74,15 @@
     </div>
 
     <script>
-        function handleLoginSubmit(event) {
-            event.preventDefault();
-            
+        window.addEventListener('DOMContentLoaded', () => {
             const userRole = sessionStorage.getItem('userRole');
+            const userTypeInput = document.getElementById('userType');
             
-            // Redirect based on user role
-            if (userRole === 'client') {
-                window.location.href = '@Url.Action("InfoPage_C", "Client")';
-            } else if (userRole === 'worker') {
-                window.location.href = '@Url.Action("InfoPage_W", "Worker")';
-            } else if (userRole === 'admin') {
-                window.location.href = '@Url.Action("AppMan_A", "Admin")';
-            } else {
-                // Default to admin if no role is set (navbar login button)
-                window.location.href = '@Url.Action("AppMan_A", "Admin")';
+            if (userRole) {
+                const capitalizedRole = userRole.charAt(0).toUpperCase() + userRole.slice(1);
+                userTypeInput.value = capitalizedRole;
             }
-        }
+        });
     </script>
 </body>
 </html>

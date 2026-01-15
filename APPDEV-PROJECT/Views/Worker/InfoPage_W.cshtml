@@ -1,3 +1,4 @@
+@model APPDEV_PROJECT.Models.InfoPage_Worker_ViewModel
 @{
     Layout = null;
 }
@@ -35,38 +36,48 @@
                 <p class="breadcrumb">Tell Us About Yourself</p>
             </div>
 
-            <form class="registration-form" id="infoForm" onsubmit="handleFormSubmit(event)">
+            <!-- ===== UPDATED: Changed to POST form with proper model binding ===== -->
+            <form class="registration-form" method="post" action="@Url.Action("InfoPage_W", "Worker")">
+                @Html.AntiForgeryToken()
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div style="color: red; margin-bottom: 15px;">
+                        @Html.ValidationSummary(true)
+                    </div>
+                }
+
                 <!-- Personal Details Section -->
                 <section class="form-section">
                     <h2 class="section-title">Personal Details</h2>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="firstName">First Name</label>
-                            <input type="text" id="firstName" name="firstName" required>
+                            <label for="FName">First Name</label>
+                            <input type="text" id="FName" name="FName" required asp-for="FName" value="@Model?.FName">
                         </div>
                         <div class="form-group">
-                            <label for="middleName">Middle Name</label>
-                            <input type="text" id="middleName" name="middleName">
+                            <label for="Mname">Middle Name</label>
+                            <input type="text" id="Mname" name="Mname" asp-for="Mname" value="@Model?.Mname">
                         </div>
                         <div class="form-group">
-                            <label for="lastName">Last Name</label>
-                            <input type="text" id="lastName" name="lastName" required>
+                            <label for="LName">Last Name</label>
+                            <input type="text" id="LName" name="LName" required asp-for="LName" value="@Model?.LName">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="dob">Date of Birth</label>
-                            <input type="date" id="dob" name="dob" required>
+                            <label for="DateOfBirth">Date of Birth</label>
+                            <input type="date" id="DateOfBirth" name="DateOfBirth" required asp-for="DateOfBirth" value="@Model?.DateOfBirth.ToString("yyyy-MM-dd")">
                         </div>
                         <div class="form-group">
-                            <label for="sex">Sex</label>
-                            <select id="sex" name="sex" required>
+                            <label for="Sex">Sex</label>
+                            <select id="Sex" name="Sex" required asp-for="Sex">
                                 <option value="">Select</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
+                                <option value="male" selected="@(Model?.Sex == "male")">Male</option>
+                                <option value="female" selected="@(Model?.Sex == "female")">Female</option>
+                                <option value="other" selected="@(Model?.Sex == "other")">Other</option>
                             </select>
                         </div>
                         <div class="form-group-empty"></div>
@@ -89,16 +100,16 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
+                            <label for="Email">Email</label>
+                            <input type="email" id="Email" name="Email" required asp-for="Email" value="@Model?.Email">
                         </div>
                         <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" required>
+                            <label for="PhoneNumber">Phone Number</label>
+                            <input type="tel" id="PhoneNumber" name="PhoneNumber" required asp-for="PhoneNumber" value="@Model?.PhoneNumber">
                         </div>
                         <div class="form-group">
-                            <label for="address">Address</label>
-                            <input type="text" id="address" name="address" required>
+                            <label for="Address">Address</label>
+                            <input type="text" id="Address" name="Address" required asp-for="Address" value="@Model?.Address">
                         </div>
                     </div>
                 </section>
@@ -109,18 +120,16 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="skill">Skill/Work</label>
-                            <div class="input-with-button">
-                                <input type="text" id="skill" name="skill" required>
-                            </div>
+                            <label for="Skill">Skill/Work</label>
+                            <input type="text" id="Skill" name="Skill" required asp-for="Skill" value="@Model?.Skill">
                         </div>
                         <div class="form-group">
-                            <label for="experience">Years of Experience</label>
-                            <input type="number" id="experience" name="experience" min="0" required>
+                            <label for="YearsOfExperience">Years of Experience</label>
+                            <input type="number" id="YearsOfExperience" name="YearsOfExperience" min="0" required asp-for="YearsOfExperience" value="@Model?.YearsOfExperience">
                         </div>
                         <div class="form-group">
-                            <label for="accomplishments">Accomplishments</label>
-                            <input type="text" id="accomplishments" name="accomplishments">
+                            <label for="Accomplishments">Accomplishments</label>
+                            <input type="text" id="Accomplishments" name="Accomplishments" asp-for="Accomplishments" value="@Model?.Accomplishments">
                         </div>
                     </div>
                 </section>
@@ -135,26 +144,5 @@
             </form>
         </div>
     </main>
-
-    <script>
-        // File upload functionality
-        document.querySelector('.upload-box').addEventListener('click', function() {
-            document.getElementById('fileUpload').click();
-        });
-
-        document.getElementById('fileUpload').addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                alert(`${e.target.files.length} file(s) selected`);
-            }
-        });
-
-        // Form submission handler
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            
-            // Redirect to Profile_W
-            window.location.href = '@Url.Action("Profile_W", "Worker")';
-        }
-    </script>
 </body>
 </html>

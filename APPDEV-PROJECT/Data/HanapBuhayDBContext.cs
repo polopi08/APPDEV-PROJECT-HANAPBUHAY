@@ -11,5 +11,31 @@ namespace APPDEV_PROJECT.Data
             
         }
         public DbSet<Client> Clients { get; set; } // represent the clients table in the database
+
+        // ===== NEW: Added Users DbSet for authentication =====
+        // This table stores user accounts for login/registration
+        public DbSet<User> Users { get; set; }
+
+        // ===== NEW: Added Workers DbSet =====
+        // This table stores worker profiles linked to user accounts
+        public DbSet<Worker> Workers { get; set; }
+
+        // ===== NEW: Configure relationships between User and Client/Worker =====
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Configure one-to-one relationship: One User can have one Client
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Client)
+                .WithOne(c => c.User)
+                .HasForeignKey<Client>(c => c.UserId);
+
+            // ===== NEW: Configure one-to-one relationship: One User can have one Worker =====
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Worker)
+                .WithOne(w => w.User)
+                .HasForeignKey<Worker>(w => w.UserId);
+        }
     }
 }

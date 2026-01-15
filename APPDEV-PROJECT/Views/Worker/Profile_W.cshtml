@@ -1,3 +1,4 @@
+@model APPDEV_PROJECT.Models.Entities.Worker
 @{
     Layout = null;
 }
@@ -29,58 +30,79 @@
 
     <div class="container">
         <div>
-            <div class="card profile-card">
-                <div class="avatar" onclick="document.getElementById('photoInput').click()">
-                    <img id="profileImage" src="" alt="Profile Picture" class="profile-img">
-                    <div class="avatar-placeholder" id="placeholder">
-                        <span class="add-photo-icon"><ion-icon name="camera-outline"></ion-icon></span>
-                        <span class="add-photo-text">Add Photo</span>
+            @if (Model != null)
+            {
+                <!-- ===== PROFILE CARD WITH DATABASE DATA ===== -->
+                <div class="card profile-card">
+                    <div class="avatar" onclick="document.getElementById('photoInput').click()">
+                        <img id="profileImage" src="" alt="Profile Picture" class="profile-img">
+                        <div class="avatar-placeholder" id="placeholder">
+                            <span class="add-photo-icon"><ion-icon name="camera-outline"></ion-icon></span>
+                            <span class="add-photo-text">Add Photo</span>
+                        </div>
+                        <input type="file" id="photoInput" accept="image/*" style="display: none;">
                     </div>
-                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
-                </div>
-                <div class="name">John Paul T. Tamares</div>
-                <div class="title">Technician</div>
-                <div class="location">1 Rosas Technical Village, Pasay City</div>
+                    <!-- ===== DISPLAY NAME, ADDRESS, EXPERIENCE FROM DATABASE ===== -->
+                    <div class="name">@Model.FullName</div>
+                    <div class="title">@Model.Skill</div>
+                    <div class="location">@Model.Address</div>
 
-                <div class="stats">
-                    <div class="stat">
-                        <div class="stat-value">23</div>
-                        <div class="stat-label">Projects Completed</div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value">23</div>
+                            <div class="stat-label">Projects Completed</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">4.9</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">@Model.YearsOfExperience+</div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
                     </div>
-                    <div class="stat">
-                        <div class="stat-value">4.9</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">3+</div>
-                        <div class="stat-label">Years Experience</div>
+
+                    <div class="buttons">
+                        <button class="btn btn-report" id="reportBtn">
+                            <ion-icon name="alert-circle-outline"></ion-icon> Report
+                        </button>
+                        <button class="btn btn-contact">
+                            <ion-icon name="call-outline"></ion-icon> Contact Now
+                        </button>
                     </div>
                 </div>
 
-                <div class="buttons">
-                    <button class="btn btn-report" id="reportBtn">
-                        <ion-icon name="alert-circle-outline"></ion-icon> Report
-                    </button>
-                    <button class="btn btn-contact">
-                        <ion-icon name="call-outline"></ion-icon> Contact Now
-                    </button>
-                </div>
-            </div>
+                <!-- ===== ACCOMPLISHMENT SECTION - EDITABLE ===== -->
+                <div class="card about-section">
+                    <div class="section-title">
+                        Accomplishment <ion-icon name="person-circle-outline"></ion-icon>
+                    </div>
+                    
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div style="color: green; padding: 10px; margin-bottom: 15px; background-color: #f0f8f0; border-radius: 4px;">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
 
-            <div class="card about-section">
-                <div class="section-title">
-                    About Me <ion-icon name="person-circle-outline"></ion-icon>
+                    <!-- ===== EDITABLE ACCOMPLISHMENT TEXT ===== -->
+                    <form method="post" action="@Url.Action("UpdateAboutMe_W", "Worker")">
+                        <input type="hidden" name="WorkerId" value="@Model.WorkerId">
+                        
+                        <textarea name="AboutMe" class="about-textarea" placeholder="Share your accomplishments and experience...">@Model.Accomplishments</textarea>
+                        
+                        <button type="submit" class="btn-new-app">
+                            <ion-icon name="checkmark-circle-outline"></ion-icon>Save Changes
+                        </button>
+                    </form>
                 </div>
-                <div class="about-text">
-                    I'm John Paul T. Tamares, a dedicated technician with 3 years of hands-on experience in troubleshooting, maintenance, and repairs. I specialize in delivering reliable technical support and practical solutions to keep systems running smoothly.
+            }
+            else
+            {
+                <div class="error-message">
+                    <p>Unable to load profile information. <a href="@Url.Action("InfoPage_W", "Worker")">Create profile</a></p>
                 </div>
-                <div class="about-text">
-                    With a detail-oriented and hands-on approach, I take pride in delivering quality work, improving system performance, and supporting smooth day-to-day operations.
-                </div>
-                <button class="btn-new-app">
-                    <ion-icon name="newspaper-outline"></ion-icon>New Application
-                </button>
-            </div>
+            }
         </div>
 
         <div>
@@ -92,7 +114,7 @@
                         <div class="highlight-label">Projects Completed</div>
                     </div>
                     <div class="highlight">
-                        <div class="highlight-value">3+</div>
+                        <div class="highlight-value">@Model.YearsOfExperience+</div>
                         <div class="highlight-label">Years Experience</div>
                     </div>
                     <div class="highlight">
@@ -251,9 +273,7 @@
                 reader.readAsDataURL(file);
             }
         });
-    </script>
 
-    <script>
         // Modal functionality
         const reportBtn = document.getElementById('reportBtn');
         const modal = document.getElementById('reportModal');

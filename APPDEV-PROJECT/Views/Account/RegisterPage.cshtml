@@ -1,3 +1,4 @@
+@model APPDEV_PROJECT.Models.RegisterViewModel
 @{
     Layout = null;
 }
@@ -21,21 +22,20 @@
                     <h2>Create Account</h2>
                 </div>
 
-                <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="firstname">First Name</label>
-                            <input type="text" id="firstname" name="firstname" required>
+                <form method="post" action="@Url.Action("Register", "Account")">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div style="color: red; margin-bottom: 15px;">
+                            @Html.ValidationSummary(true)
                         </div>
-                        <div class="form-group">
-                            <label for="lastname">Last Name</label>
-                            <input type="text" id="lastname" name="lastname" required>
-                        </div>
-                    </div>
+                    }
+
+                    <!-- Hidden userType field - populated from sessionStorage -->
+                    <input type="hidden" id="userType" name="userType">
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" value="@Model?.Email" required>
                     </div>
 
                     <div class="form-group">
@@ -43,6 +43,14 @@
                         <div class="password-input">
                             <input type="password" id="password" name="password" required>
                             <span class="password-toggle" id="togglePassword">👁</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="password-input">
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                            <span class="password-toggle" id="toggleConfirmPassword">👁</span>
                         </div>
                     </div>
 
@@ -54,21 +62,12 @@
                     </div>
 
                     <button type="submit" class="btn-signup">Sign Up</button>
-
-                    <div class="divider">or sign up with</div>
-
-                    <button type="button" class="btn-google">
-                        <img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
-                        Continue with Google
-                    </button>
                 </form>
             </div>
         </div>
 
         <!-- Right Panel - Welcome Section -->
         <div class="right-panel">
-
-
             <div class="image-container">
                 <div class="image-placeholder">
                     <img src="~/Images/register.png" alt="Register collage" class="register-image">
@@ -83,31 +82,35 @@
     </div>
 
     <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const userRole = sessionStorage.getItem('userRole');
+            const userTypeInput = document.getElementById('userType');
+            
+            if (userRole) {
+                const capitalizedRole = userRole.charAt(0).toUpperCase() + userRole.slice(1);
+                userTypeInput.value = capitalizedRole;
+            }
+        });
+
+        // Password toggle for password field
         const togglePassword = document.getElementById("togglePassword");
         const passwordInput = document.getElementById("password");
 
         togglePassword.addEventListener("click", () => {
             const isPassword = passwordInput.type === "password";
-
             passwordInput.type = isPassword ? "text" : "password";
             togglePassword.textContent = isPassword ? "👁" : "👁";
         });
 
-        function handleRegisterSubmit(event) {
-            event.preventDefault();
-            
-            const userRole = sessionStorage.getItem('userRole');
-            
-            // Simulate successful registration (replace with actual registration logic)
-            if (userRole === 'client') {
-                window.location.href = '@Url.Action("InfoPage_C", "Client")';
-            } else if (userRole === 'worker') {
-                window.location.href = '@Url.Action("InfoPage_W", "Worker")';
-            } else {
-                // Default to landing page if no role is set
-                window.location.href = '@Url.Action("LandingPage", "Home")';
-            }
-        }
+        // Password toggle for confirm password field
+        const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+
+        toggleConfirmPassword.addEventListener("click", () => {
+            const isPassword = confirmPasswordInput.type === "password";
+            confirmPasswordInput.type = isPassword ? "text" : "password";
+            toggleConfirmPassword.textContent = isPassword ? "👁" : "👁";
+        });
     </script>
 
 </body>

@@ -261,6 +261,26 @@ body {
     margin-bottom: 15px;
 }
 
+/* ===== NEW: Textarea styling for About Me ===== */
+.about-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+}
+
+.about-textarea:focus {
+    outline: none;
+    border-color: #F6A33C;
+    box-shadow: 0 0 4px rgba(246, 163, 60, 0.3);
+}
+
 .btn-new-app {
     background: #FFF3CD;
     color: #856404;
