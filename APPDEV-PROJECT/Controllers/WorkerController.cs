@@ -269,5 +269,30 @@ namespace APPDEV_PROJECT.Controllers
         {
             return View();
         }
+
+        // ===== NEW: View worker profile as Client (Read-Only) =====
+        // This action displays a worker's profile in read-only mode for clients
+        [HttpGet]
+        public async Task<IActionResult> ViewWorkerProfile(Guid workerId)
+        {
+            try
+            {
+                // ===== Get worker profile by ID =====
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.WorkerId == workerId);
+
+                if (worker == null)
+                {
+                    return NotFound();
+                }
+
+                // Pass to a read-only view
+                return View("ViewWorkerProfile", worker);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error loading worker profile: {ex.Message}");
+                return RedirectToAction("SearchPage_C", "Client");
+            }
+        }
     }
 }

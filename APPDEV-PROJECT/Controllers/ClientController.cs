@@ -23,21 +23,44 @@ namespace APPDEV_PROJECT.Controllers
 
         [HttpGet]
         [Route("api/workers/nearby")]
-        public IActionResult GetNearbyWorkers(double lat, double lng, string skill = "", string search = "")
+        public async Task<IActionResult> GetNearbyWorkers(double lat, double lng, string skill = "", string search = "")
         {
             try
             {
-                var mockWorkers = new List<WorkerFilterHelper.WorkerWithDistance>
-                {
-                    new() { Id = 1, Name = "Kyle Bernido", Skill = "Carpenter", Lat = 14.605, Lng = 121.030 },
-                    new() { Id = 2, Name = "Vivian Yambao", Skill = "Cook", Lat = 14.603, Lng = 121.029 },
-                    new() { Id = 3, Name = "Viaani Ubalde", Skill = "Electrician", Lat = 14.606, Lng = 121.028 },
-                    new() { Id = 4, Name = "Kyle Bernido", Skill = "Technician", Lat = 14.604, Lng = 121.031 },
-                    new() { Id = 5, Name = "Giselle Valdez", Skill = "Plumber", Lat = 14.602, Lng = 121.027 },
-                    new() { Id = 6, Name = "Sophia Cutue", Skill = "Plumber", Lat = 14.603, Lng = 121.028 }
-                };
+                // ===== NEW: Fetch actual workers from database =====
+                var workers = await dbContext.Workers.ToListAsync();
 
-                var filteredWorkers = WorkerFilterHelper.GetNearbyWorkers(mockWorkers, lat, lng, skill, search);
+                // ===== Convert to WorkerWithDistance objects with actual GUIDs =====
+                var workersWithDistance = workers.Select(w => new
+                {
+                    Id = w.WorkerId.ToString(), // Convert GUID to string
+                    Name = w.FullName,
+                    Skill = w.Skill,
+                    Lat = 14.604432, // Default to San Juan center if not stored
+                    Lng = 121.029950,
+                    DistanceKm = 0.0 // Will be calculated
+                }).ToList();
+
+                // ===== Calculate distances and filter =====
+                var filteredWorkers = workersWithDistance
+                    .Select(w => new
+                    {
+                        w.Id,
+                        w.Name,
+                        w.Skill,
+                        w.Lat,
+                        w.Lng,
+                        DistanceKm = WorkerFilterHelper.CalculateDistance(lat, lng, w.Lat, w.Lng)
+                    })
+                    .Where(w => w.DistanceKm <= WorkerFilterHelper.MaxDistanceKm)
+                    .Where(w => string.IsNullOrEmpty(skill) || 
+                               w.Skill.Equals(skill, StringComparison.OrdinalIgnoreCase))
+                    .Where(w => string.IsNullOrEmpty(search) || 
+                               w.Skill.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                               w.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(w => w.DistanceKm)
+                    .ToList();
+
                 return Json(filteredWorkers);
             }
             catch (System.Exception ex)

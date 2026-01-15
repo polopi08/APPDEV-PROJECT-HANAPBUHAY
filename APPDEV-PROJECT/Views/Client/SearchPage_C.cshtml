@@ -155,7 +155,7 @@
                                 <span class="star"><ion-icon name="star"></ion-icon></span>
                                 <span class="star"><ion-icon name="star"></ion-icon></span>
                             </div>
-                            <button class="view-details-btn" onclick="viewWorkerDetails(${worker.Id})">View Details</button>
+                            <button class="view-details-btn" onclick="viewWorkerDetails('${worker.Id}')">View Details</button>
                         `;
                         grid.appendChild(card);
                     });
@@ -167,7 +167,7 @@
         }
 
         function viewWorkerDetails(workerId){
-            window.location.href = `/Client/InfoPage_C?workerId=${workerId}`;
+            window.location.href = `/Worker/ViewWorkerProfile?workerId=${workerId}`;
         }
 
         // Geolocation button
