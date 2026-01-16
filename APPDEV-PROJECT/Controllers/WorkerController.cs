@@ -2,6 +2,7 @@
 using APPDEV_PROJECT.Data;
 using APPDEV_PROJECT.Models;
 using APPDEV_PROJECT.Models.Entities;
+using APPDEV_PROJECT.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -41,6 +42,22 @@ namespace APPDEV_PROJECT.Controllers
             {
                 try
                 {
+                    // ===== Validate barangay is in San Juan =====
+                    if (string.IsNullOrEmpty(viewModel.Barangay) || !AddressLocationHelper.IsInSanJuan(viewModel.Barangay))
+                    {
+                        ModelState.AddModelError("Barangay", "Please select a valid barangay in San Juan.");
+                        return View(viewModel);
+                    }
+
+                    // ===== Get coordinates for the selected barangay =====
+                    var (latitude, longitude) = AddressLocationHelper.GetCoordinatesForBarangay(viewModel.Barangay);
+
+                    if (!latitude.HasValue || !longitude.HasValue)
+                    {
+                        ModelState.AddModelError("Barangay", "Could not determine location for the selected barangay.");
+                        return View(viewModel);
+                    }
+
                     // ===== STEP 1: Get the UserId from session (set during registration) =====
                     // This connects the worker profile to the user account
                     var userIdString = HttpContext.Session.GetString("NewUserId");
@@ -70,6 +87,8 @@ namespace APPDEV_PROJECT.Controllers
                         Sex = viewModel.Sex,
                         PhoneNumber = viewModel.PhoneNumber,
                         Address = viewModel.Address,
+                        Latitude = latitude,
+                        Longitude = longitude,
                         Skill = viewModel.Skill,
                         YearsOfExperience = viewModel.YearsOfExperience,
                         Accomplishments = viewModel.Accomplishments

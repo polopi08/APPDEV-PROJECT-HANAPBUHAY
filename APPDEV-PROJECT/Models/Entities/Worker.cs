@@ -24,6 +24,10 @@ namespace APPDEV_PROJECT.Models.Entities
 
         public string Address { get; set; }
 
+        // ===== NEW: Location coordinates for geolocation =====
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+
         // ===== Work Background Information =====
         public string Skill { get; set; }
 

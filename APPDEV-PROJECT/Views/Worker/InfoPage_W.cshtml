@@ -107,9 +107,32 @@
                             <label for="PhoneNumber">Phone Number</label>
                             <input type="tel" id="PhoneNumber" name="PhoneNumber" required asp-for="PhoneNumber" value="@Model?.PhoneNumber">
                         </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="Address">Address <span style="color: red;">*</span></label>
+                            <input type="text" id="Address" name="Address" required asp-for="Address" value="@Model?.Address" placeholder="e.g., Pamana Building, Damka St., San Juan Greenhills, San Juan City, Metro Manila, Philippines">
+                            <small style="display: block; margin-top: 5px; color: #666;">Format: Building Name, Street Name, Barangay, City, Province, Country</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
                         <div class="form-group">
-                            <label for="Address">Address</label>
-                            <input type="text" id="Address" name="Address" required asp-for="Address" value="@Model?.Address">
+                            <label for="Barangay">Barangay <span style="color: red;">*</span></label>
+                            <select id="Barangay" name="Barangay" required>
+                                <option value="">-- Select your barangay in San Juan --</option>
+                                <option value="San Juan Greenhills">San Juan Greenhills</option>
+                                <option value="San Juan Addition Hills">San Juan Addition Hills</option>
+                                <option value="Corazon de Jesus">Corazon de Jesus</option>
+                                <option value="West Crame">West Crame</option>
+                                <option value="West Greenhills">West Greenhills</option>
+                                <option value="San Juan Pinaglabanan">San Juan Pinaglabanan</option>
+                                <option value="Balong-Bato">Balong-Bato</option>
+                                <option value="F. Manalo">F. Manalo</option>
+                                <option value="San Juan del Monte">San Juan del Monte</option>
+                            </select>
+                            <small style="display: block; margin-top: 5px; color: #666;">Must be in San Juan to appear in client searches</small>
                         </div>
                     </div>
                 </section>

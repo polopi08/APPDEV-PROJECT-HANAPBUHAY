@@ -13,6 +13,7 @@ namespace APPDEV_PROJECT.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
+        public string Barangay { get; set; }
 
         // Work Background
         public string Skill { get; set; }

@@ -27,18 +27,19 @@ namespace APPDEV_PROJECT.Controllers
         {
             try
             {
-                // ===== NEW: Fetch actual workers from database =====
+                // ===== Fetch actual workers from database =====
                 var workers = await dbContext.Workers.ToListAsync();
 
-                // ===== Convert to WorkerWithDistance objects with actual GUIDs =====
+                // ===== Convert to objects with worker coordinates =====
                 var workersWithDistance = workers.Select(w => new
                 {
-                    Id = w.WorkerId.ToString(), // Convert GUID to string
+                    Id = w.WorkerId.ToString(),
                     Name = w.FullName,
                     Skill = w.Skill,
-                    Lat = 14.604432, // Default to San Juan center if not stored
-                    Lng = 121.029950,
-                    DistanceKm = 0.0 // Will be calculated
+                    // Use worker's actual coordinates, fallback to default if not set
+                    Lat = w.Latitude ?? 14.604432,
+                    Lng = w.Longitude ?? 121.029950,
+                    DistanceKm = 0.0
                 }).ToList();
 
                 // ===== Calculate distances and filter =====
