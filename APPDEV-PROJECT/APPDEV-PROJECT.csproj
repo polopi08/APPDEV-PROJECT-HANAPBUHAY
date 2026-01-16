@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <None Include="Views\Admin\AppMan_A.cshtml" />
-    <None Include="Views\Worker\ChatPage_W.cshtml" />
     <None Include="Views\Admin\DashboardPage_A.cshtml" />
     <None Include="Views\Client\InfoPage_C.cshtml" />
     <None Include="Views\Worker\InfoPage_W.cshtml" />

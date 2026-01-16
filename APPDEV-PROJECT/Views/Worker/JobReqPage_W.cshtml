@@ -62,7 +62,7 @@
                                 <div class="profile-placeholder"></div>
                             </div>
                             <div class="card-details">
-                                <div class="client-name">@request.Client?.FullName ?? "Unknown Client"</div>
+                                <div class="client-name">@(request.Client != null ? $"{request.Client.FName} {request.Client.LName}" : "Client")</div>
                                 <div class="detail-item">
                                     <ion-icon name="location-outline"></ion-icon>
                                     <span>@(request.Client?.Address ?? "Location not specified")</span>

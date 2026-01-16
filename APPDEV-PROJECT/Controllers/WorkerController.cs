@@ -294,7 +294,7 @@ namespace APPDEV_PROJECT.Controllers
                     return RedirectToAction("InfoPage_W");
                 }
 
-                // ===== Get job requests for this worker =====
+                // ===== Get job requests for this worker with Client data =====
                 var jobRequests = await dbContext.JobRequests
                     .Where(j => j.WorkerId == worker.WorkerId && j.Status == "Pending")
                     .Include(j => j.Client)

@@ -52,12 +52,12 @@
                 {
                     @foreach (var conversation in (List<APPDEV_PROJECT.Models.Entities.Conversation>)ViewBag.Conversations)
                     {
-                        <div class="chat-item" data-conversation-id="@conversation.ConversationId" data-client-name="@conversation.Client?.FullName">
+                        <div class="chat-item" data-conversation-id="@conversation.ConversationId" data-client-name="@(conversation.Client != null ? $"{conversation.Client.FName} {conversation.Client.LName}" : "Client")">
                             <div class="chat-avatar" style="background: #FFE5B4;">
                                 <ion-icon name="person-outline"></ion-icon>
                             </div>
                             <div class="chat-info">
-                                <div class="chat-name">@conversation.Client?.FullName ?? "Unknown Client"</div>
+                                <div class="chat-name">@(conversation.Client != null ? $"{conversation.Client.FName} {conversation.Client.LName}" : "Client")</div>
                                 <div class="chat-preview">Click to view messages</div>
                             </div>
                         </div>
