@@ -70,6 +70,88 @@ namespace APPDEV_PROJECT.Controllers
             }
         }
 
+        // ===== NEW: API endpoint for booking requests =====
+        [HttpPost]
+        [Route("api/booking/request")]
+        public async Task<IActionResult> CreateBookingRequest([FromBody] CreateBookingRequestDto dto)
+        {
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                // ===== Get client profile for the logged-in user =====
+                var client = await dbContext.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+                
+                if (client == null)
+                {
+                    return BadRequest(new { message = "Client profile not found" });
+                }
+
+                // ===== Parse worker ID =====
+                if (!Guid.TryParse(dto.WorkerId, out var workerId))
+                {
+                    return BadRequest(new { message = "Invalid worker ID" });
+                }
+
+                // ===== Verify worker exists =====
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.WorkerId == workerId);
+                if (worker == null)
+                {
+                    return BadRequest(new { message = "Worker not found" });
+                }
+
+                // ===== Create job request =====
+                var jobRequest = new JobRequest
+                {
+                    JobRequestId = Guid.NewGuid(),
+                    ClientId = client.ClientId,
+                    WorkerId = workerId,
+                    ServiceDetails = dto.ServiceDetails,
+                    RequestDate = DateTime.Now,
+                    Status = "Pending"
+                };
+
+                dbContext.JobRequests.Add(jobRequest);
+                await dbContext.SaveChangesAsync();
+
+                // ===== NEW: Create notification for worker =====
+                var notification = new Notification
+                {
+                    NotificationId = Guid.NewGuid(),
+                    RecipientId = worker.UserId,
+                    JobRequestId = jobRequest.JobRequestId,
+                    SenderId = userId,
+                    Title = "New Booking Request",
+                    Message = $"{client.FullName} sent you a booking request for {jobRequest.ServiceDetails}",
+                    Type = "booking",
+                    IsRead = false,
+                    CreatedAt = DateTime.Now
+                };
+
+                dbContext.Notifications.Add(notification);
+                await dbContext.SaveChangesAsync();
+
+                return Ok(new { message = "Booking request sent successfully", jobRequestId = jobRequest.JobRequestId });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { message = $"Error creating booking request: {ex.Message}" });
+            }
+        }
+
+        // ===== DTO for booking request =====
+        public class CreateBookingRequestDto
+        {
+            public string WorkerId { get; set; }
+            public string ServiceDetails { get; set; }
+        }
+
         /* changes, this is for messaging*/
                 [HttpGet]
                 [Route("api/messages/conversations")]

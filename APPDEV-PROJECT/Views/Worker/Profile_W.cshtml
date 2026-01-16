@@ -61,15 +61,6 @@
                             <div class="stat-label">Years Experience</div>
                         </div>
                     </div>
-
-                    <div class="buttons">
-                        <button class="btn btn-report" id="reportBtn">
-                            <ion-icon name="alert-circle-outline"></ion-icon> Report
-                        </button>
-                        <button class="btn btn-contact">
-                            <ion-icon name="call-outline"></ion-icon> Contact Now
-                        </button>
-                    </div>
                 </div>
 
                 <!-- ===== ACCOMPLISHMENT SECTION - EDITABLE ===== -->
@@ -181,83 +172,6 @@
         </div>
     </div>
 
-    <!-- Report Modal -->
-    <div class="modal-overlay" id="reportModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Report Content</h2>
-                <button class="modal-close" id="closeModal">
-                    <ion-icon name="close-outline"></ion-icon>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="report-question">What are you reporting?</div>
-                <div class="reason-grid">
-                    <button class="reason-btn" data-reason="inappropriate">
-                        <ion-icon name="warning-outline"></ion-icon>
-                        Inappropriate Content
-                    </button>
-                    <button class="reason-btn" data-reason="misleading">
-                        <ion-icon name="alert-outline"></ion-icon>
-                        Misleading Info
-                    </button>
-                    <button class="reason-btn" data-reason="scam">
-                        <ion-icon name="shield-outline"></ion-icon>
-                        Scam
-                    </button>
-                    <button class="reason-btn" data-reason="spam">
-                        <ion-icon name="mail-outline"></ion-icon>
-                        Spam or Ads
-                    </button>
-                    <button class="reason-btn" data-reason="fake">
-                        <ion-icon name="person-outline"></ion-icon>
-                        Fake Profile
-                    </button>
-                    <button class="reason-btn" data-reason="harassment">
-                        <ion-icon name="hand-left-outline"></ion-icon>
-                        Harassment
-                    </button>
-                    <button class="reason-btn" data-reason="violence">
-                        <ion-icon name="pulse-outline"></ion-icon>
-                        Violence/Threats
-                    </button>
-                    <button class="reason-btn" data-reason="other">
-                        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
-                        Other
-                    </button>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Content type</label>
-                    <select class="form-select">
-                        <option>Select content type</option>
-                        <option>Profile Information</option>
-                        <option>Service Description</option>
-                        <option>Reviews</option>
-                        <option>Photos</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-textarea" placeholder="Provide specific details about what you're reporting..."></textarea>
-                </div>
-
-                <div class="important-notice">
-                    <ion-icon name="information-circle-outline"></ion-icon>
-                    <div class="notice-text">
-                        <strong>Important Notice:</strong> False reports may result in account suspension. Please report content that violates our community guidelines.
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="modal-btn modal-btn-cancel" id="cancelBtn">Cancel</button>
-                    <button class="modal-btn modal-btn-submit">Submit Report</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         document.getElementById('photoInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -272,39 +186,6 @@
                 };
                 reader.readAsDataURL(file);
             }
-        });
-
-        // Modal functionality
-        const reportBtn = document.getElementById('reportBtn');
-        const modal = document.getElementById('reportModal');
-        const closeModal = document.getElementById('closeModal');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const reasonBtns = document.querySelectorAll('.reason-btn');
-
-        reportBtn.addEventListener('click', () => {
-            modal.classList.add('active');
-        });
-
-        closeModal.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
-
-        cancelBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
-
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-            }
-        });
-
-        // Reason button selection
-        reasonBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                reasonBtns.forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-            });
         });
     </script>
 

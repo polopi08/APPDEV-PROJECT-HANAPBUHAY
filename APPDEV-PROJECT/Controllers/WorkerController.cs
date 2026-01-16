@@ -274,14 +274,213 @@ namespace APPDEV_PROJECT.Controllers
             }
         }
 
-        public IActionResult JobReqPage_W()
+        public async Task<IActionResult> JobReqPage_W()
         {
-            return View();
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return RedirectToAction("LoginPage", "Account");
+                }
+
+                // ===== Get worker profile for the logged-in user =====
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
+                
+                if (worker == null)
+                {
+                    return RedirectToAction("InfoPage_W");
+                }
+
+                // ===== Get job requests for this worker =====
+                var jobRequests = await dbContext.JobRequests
+                    .Where(j => j.WorkerId == worker.WorkerId && j.Status == "Pending")
+                    .Include(j => j.Client)
+                    .OrderByDescending(j => j.RequestDate)
+                    .ToListAsync();
+
+                return View(jobRequests);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error loading job requests: {ex.Message}");
+                return View(new List<JobRequest>());
+            }
         }
 
-        public IActionResult NotifPage_W()
+        // ===== NEW: Accept job request API =====
+        [HttpPost]
+        [Route("api/booking/accept/{jobRequestId}")]
+        public async Task<IActionResult> AcceptJobRequest(Guid jobRequestId)
         {
-            return View();
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                // ===== Get worker profile for the logged-in user =====
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
+                
+                if (worker == null)
+                {
+                    return BadRequest(new { message = "Worker profile not found" });
+                }
+
+                // ===== Get job request =====
+                var jobRequest = await dbContext.JobRequests
+                    .Include(j => j.Client)
+                    .FirstOrDefaultAsync(j => j.JobRequestId == jobRequestId);
+                
+                if (jobRequest == null)
+                {
+                    return BadRequest(new { message = "Job request not found" });
+                }
+
+                // ===== Verify the request is for this worker =====
+                if (jobRequest.WorkerId != worker.WorkerId)
+                {
+                    return Unauthorized(new { message = "You cannot accept a request not meant for you" });
+                }
+
+                // ===== Update status =====
+                jobRequest.Status = "Accepted";
+                dbContext.JobRequests.Update(jobRequest);
+                await dbContext.SaveChangesAsync();
+
+                // ===== NEW: Create notification for client =====
+                var clientNotification = new Notification
+                {
+                    NotificationId = Guid.NewGuid(),
+                    RecipientId = jobRequest.Client.UserId,
+                    JobRequestId = jobRequest.JobRequestId,
+                    SenderId = userId,
+                    Title = "Booking Accepted",
+                    Message = $"{worker.FullName} accepted your booking request",
+                    Type = "booking",
+                    IsRead = false,
+                    CreatedAt = DateTime.Now
+                };
+
+                dbContext.Notifications.Add(clientNotification);
+                await dbContext.SaveChangesAsync();
+
+                return Ok(new { message = "Job request accepted" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Error accepting request: {ex.Message}" });
+            }
+        }
+
+        // ===== NEW: Reject job request API =====
+        [HttpPost]
+        [Route("api/booking/reject/{jobRequestId}")]
+        public async Task<IActionResult> RejectJobRequest(Guid jobRequestId)
+        {
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                // ===== Get worker profile for the logged-in user =====
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
+                
+                if (worker == null)
+                {
+                    return BadRequest(new { message = "Worker profile not found" });
+                }
+
+                // ===== Get job request =====
+                var jobRequest = await dbContext.JobRequests
+                    .Include(j => j.Client)
+                    .FirstOrDefaultAsync(j => j.JobRequestId == jobRequestId);
+                
+                if (jobRequest == null)
+                {
+                    return BadRequest(new { message = "Job request not found" });
+                }
+
+                // ===== Verify the request is for this worker =====
+                if (jobRequest.WorkerId != worker.WorkerId)
+                {
+                    return Unauthorized(new { message = "You cannot reject a request not meant for you" });
+                }
+
+                // ===== Update status =====
+                jobRequest.Status = "Rejected";
+                dbContext.JobRequests.Update(jobRequest);
+                await dbContext.SaveChangesAsync();
+
+                // ===== NEW: Create notification for client =====
+                var clientNotification = new Notification
+                {
+                    NotificationId = Guid.NewGuid(),
+                    RecipientId = jobRequest.Client.UserId,
+                    JobRequestId = jobRequest.JobRequestId,
+                    SenderId = userId,
+                    Title = "Booking Rejected",
+                    Message = $"{worker.FullName} rejected your booking request",
+                    Type = "booking",
+                    IsRead = false,
+                    CreatedAt = DateTime.Now
+                };
+
+                dbContext.Notifications.Add(clientNotification);
+                await dbContext.SaveChangesAsync();
+
+                return Ok(new { message = "Job request rejected" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Error rejecting request: {ex.Message}" });
+            }
+        }
+
+        public async Task<IActionResult> NotifPage_W()
+        {
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return RedirectToAction("LoginPage", "Account");
+                }
+
+                // ===== Get worker profile for the logged-in user =====
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
+                
+                if (worker == null)
+                {
+                    return RedirectToAction("InfoPage_W");
+                }
+
+                // ===== Get notifications for this worker =====
+                var notifications = await dbContext.Notifications
+                    .Where(n => n.RecipientId == userId)
+                    .OrderByDescending(n => n.CreatedAt)
+                    .ToListAsync();
+
+                return View(notifications);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error loading notifications: {ex.Message}");
+                return View(new List<Notification>());
+            }
         }
 
         public IActionResult ChatPage_W()

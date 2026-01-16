@@ -20,6 +20,14 @@ namespace APPDEV_PROJECT.Data
         // This table stores worker profiles linked to user accounts
         public DbSet<Worker> Workers { get; set; }
 
+        // ===== NEW: Added JobRequest DbSet =====
+        // This table stores job booking requests from clients to workers
+        public DbSet<JobRequest> JobRequests { get; set; }
+
+        // ===== NEW: Added Notifications DbSet =====
+        // This table stores notifications for users
+        public DbSet<Notification> Notifications { get; set; }
+
         // ===== NEW: Configure relationships between User and Client/Worker =====
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +44,26 @@ namespace APPDEV_PROJECT.Data
                 .HasOne(u => u.Worker)
                 .WithOne(w => w.User)
                 .HasForeignKey<Worker>(w => w.UserId);
+
+            // ===== NEW: Configure relationships for JobRequest =====
+            modelBuilder.Entity<JobRequest>()
+                .HasOne(j => j.Client)
+                .WithMany()
+                .HasForeignKey(j => j.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<JobRequest>()
+                .HasOne(j => j.Worker)
+                .WithMany()
+                .HasForeignKey(j => j.WorkerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ===== NEW: Configure relationships for Notification =====
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.JobRequest)
+                .WithMany()
+                .HasForeignKey(n => n.JobRequestId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

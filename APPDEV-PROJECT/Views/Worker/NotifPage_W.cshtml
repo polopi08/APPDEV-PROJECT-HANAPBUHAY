@@ -1,6 +1,7 @@
 @{
     Layout = null;
 }
+@model List<APPDEV_PROJECT.Models.Entities.Notification>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,86 +39,71 @@
             <div class="notifications-filters">
                 <button class="filter-btn active">All</button>
                 <button class="filter-btn">Unread</button>
-                <button class="filter-btn">System</button>
+                <button class="filter-btn">Booking</button>
                 <button class="sort-btn">
                     <ion-icon name="funnel-outline"></ion-icon>
-                    Ne
-
+                    Newest
                 </button>
             </div>
 
             <div class="notifications-list">
-                <div class="notification-item" data-type="worker-accepted" data-read="false" data-timestamp="120">
-                    <div class="notification-icon" style="background: #FFE5B4;">
-                        <ion-icon name="checkmark-circle-outline"></ion-icon>
+                @if (Model == null || Model.Count == 0)
+                {
+                    <div style="text-align: center; padding: 60px 20px; color: #999;">
+                        <ion-icon name="notifications-off-outline" style="font-size: 60px; display: block; margin-bottom: 15px;"></ion-icon>
+                        <p style="font-size: 16px;">No notifications yet</p>
                     </div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <strong>Kyle Bernido</strong> accepted your booking request.
+                }
+                else
+                {
+                    @foreach (var notification in Model)
+                    {
+                        <div class="notification-item" data-type="@notification.Type" data-read="@notification.IsRead.ToString().ToLower()" data-timestamp="@((long)(DateTime.Now - notification.CreatedAt).TotalSeconds)">
+                            <div class="notification-icon" style="background: #FFE5B4;">
+                                @if (notification.Type == "booking")
+                                {
+                                    <ion-icon name="calendar-outline"></ion-icon>
+                                }
+                                else if (notification.Type == "message")
+                                {
+                                    <ion-icon name="chatbubble-outline"></ion-icon>
+                                }
+                                else if (notification.Type == "review")
+                                {
+                                    <ion-icon name="star-outline"></ion-icon>
+                                }
+                                else
+                                {
+                                    <ion-icon name="megaphone-outline"></ion-icon>
+                                }
+                            </div>
+                            <div class="notification-content">
+                                <div class="notification-text">
+                                    <strong>@notification.Title</strong> - @notification.Message
+                                </div>
+                                <div class="notification-time">@{
+                                    var diff = DateTime.Now - notification.CreatedAt;
+                                    if (diff.TotalSeconds < 60)
+                                    {
+                                        @((int)diff.TotalSeconds + " secs ago")
+                                    }
+                                    else if (diff.TotalMinutes < 60)
+                                    {
+                                        @((int)diff.TotalMinutes + " mins ago")
+                                    }
+                                    else if (diff.TotalHours < 24)
+                                    {
+                                        @((int)diff.TotalHours + " hours ago")
+                                    }
+                                    else
+                                    {
+                                        @((int)diff.TotalDays + " days ago")
+                                    }
+                                }</div>
+                            </div>
                         </div>
-                        <div class="notification-time">2 mins ago</div>
-                    </div>
-                </div>
-
-                <div class="notification-item" data-type="message" data-read="false" data-timestamp="600">
-                    <div class="notification-icon" style="background: #FFE5B4;">
-                        <ion-icon name="chatbubble-outline"></ion-icon>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <strong>Vivian Yambao</strong> sent you a message.
-                        </div>
-                        <div class="notification-time">10 mins ago</div>
-                    </div>
-                </div>
-
-                <div class="notification-item" data-type="review" data-read="true" data-timestamp="14400">
-                    <div class="notification-icon" style="background: #FFE5B4;">
-                        <ion-icon name="star-outline"></ion-icon>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <strong>Viaani Ubalde</strong> completed the service. Leave a review.
-                        </div>
-                        <div class="notification-time">4 hrs ago</div>
-                    </div>
-                </div>
-
-                <div class="notification-item" data-type="system" data-read="true" data-timestamp="86400">
-                    <div class="notification-icon" style="background: #FFE5B4;">
-                        <ion-icon name="megaphone-outline"></ion-icon>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <strong>System:</strong> New workers added matching your search
-                        </div>
-                        <div class="notification-time">Yesterday</div>
-                    </div>
-                </div>
-
-                <div class="notification-item" data-type="booking-cancelled" data-read="true" data-timestamp="172800">
-                    <div class="notification-icon" style="background: #FFFF99;">
-                        <ion-icon name="close-circle-outline"></ion-icon>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <strong>Giselle Valdez</strong> cancelled the booking.
-                        </div>
-                        <div class="notification-time">2 days ago</div>
-                    </div>
-                </div>
-
-                <div class="notification-item" data-type="system" data-read="true" data-timestamp="259200">
-                    <div class="notification-icon" style="background: #FFE5B4;">
-                        <ion-icon name="alert-circle-outline"></ion-icon>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <strong>System:</strong> Complete your profile for better matches
-                        </div>
-                        <div class="notification-time">3 days ago</div>
-                    </div>
-                </div>
+                    }
+                }
             </div>
         </div>
 
@@ -129,28 +115,28 @@
                     <h3>Active Bookings</h3>
                 </div>
                 <div class="service-card-content">
-                    <p>• 1 Active Booking</p>
-                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Kyle Bernido - Carpenter</p>
+                    <p>• @(Model?.Count(n => n.Type == "booking" && !n.IsRead) ?? 0) New Booking Request(s)</p>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Check Job Requests for details</p>
                 </div>
             </div>
 
             <div class="service-card">
                 <div class="service-card-header">
                     <ion-icon name="time-outline"></ion-icon>
-                    <h3>Booking History</h3>
+                    <h3>Notification Stats</h3>
                 </div>
                 <div class="service-card-content">
                     <div class="service-stat">
-                        <span class="stat-number">12</span>
-                        <span class="stat-label">Total Bookings</span>
+                        <span class="stat-number">@(Model?.Count ?? 0)</span>
+                        <span class="stat-label">Total Notifications</span>
                     </div>
                     <div class="service-stat">
-                        <span class="stat-number">1</span>
-                        <span class="stat-label">Active Bookings</span>
+                        <span class="stat-number">@(Model?.Count(n => !n.IsRead) ?? 0)</span>
+                        <span class="stat-label">Unread</span>
                     </div>
                     <div class="service-stat">
-                        <span class="stat-number">11</span>
-                        <span class="stat-label">Completed</span>
+                        <span class="stat-number">@(Model?.Count(n => n.Type == "booking") ?? 0)</span>
+                        <span class="stat-label">Bookings</span>
                     </div>
                 </div>
             </div>
@@ -167,13 +153,8 @@
         // Filter functionality
         filterBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                // Remove active class from all filter buttons
                 filterBtns.forEach(b => b.classList.remove('active'));
-
-                // Add active class to clicked button
                 this.classList.add('active');
-
-                // Get filter type
                 currentFilter = this.textContent.toLowerCase();
                 applyFilters();
             });
@@ -182,9 +163,8 @@
         // Sort functionality
         sortBtn.addEventListener('click', function() {
             sortOrder = sortOrder === 'newest' ? 'oldest' : 'newest';
-            const icon = sortBtn.querySelector('ion-icon');
-            icon.setAttribute('name', sortOrder === 'newest' ? 'caret-up-outline' : 'caret-down-outline');
-            sortBtn.innerHTML = `<ion-icon name="${sortOrder === 'newest' ? 'caret-up-outline' : 'caret-down-outline'}"></ion-icon> ${sortOrder.charAt(0).toUpperCase() + sortOrder.slice(1)}`;
+            const icon = sortOrder === 'newest' ? 'caret-up-outline' : 'caret-down-outline';
+            sortBtn.innerHTML = `<ion-icon name="${icon}"></ion-icon> ${sortOrder.charAt(0).toUpperCase() + sortOrder.slice(1)}`;
             applyFilters();
         });
 
@@ -201,8 +181,8 @@
                     show = true;
                 } else if (currentFilter === 'unread') {
                     show = !isRead;
-                } else if (currentFilter === 'system') {
-                    show = type === 'system';
+                } else if (currentFilter === 'booking') {
+                    show = type === 'booking';
                 }
 
                 if (show) {

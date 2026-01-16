@@ -129,6 +129,9 @@
                         <button class="btn btn-report" id="reportBtn">
                             <ion-icon name="alert-circle-outline"></ion-icon> Report
                         </button>
+                        <button class="btn btn-contact" id="bookNowBtn">
+                            <ion-icon name="calendar-outline"></ion-icon> Book Now
+                        </button>
                         <button class="btn btn-contact" onclick="openContactModal()">
                             <ion-icon name="call-outline"></ion-icon> Contact Now
                         </button>
@@ -340,6 +343,29 @@
         </div>
     </div>
 
+    <!-- Booking Modal -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Book @Model?.FullName</h2>
+                <button class="modal-close" id="closeBookingModal">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Service Details</label>
+                    <textarea class="form-textarea" id="serviceDetails" placeholder="Describe the service you need..."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="modal-btn modal-btn-cancel" id="cancelBookingBtn">Cancel</button>
+                    <button class="modal-btn modal-btn-submit" id="submitBookingBtn">Send Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Report Modal functionality
         const reportBtn = document.getElementById('reportBtn');
@@ -403,6 +429,77 @@
                 alert('Please enter a message.');
             }
         }
+
+        // Booking Modal functionality
+        const bookingModal = document.getElementById('bookingModal');
+        const bookNowBtn = document.getElementById('bookNowBtn');
+        const closeBookingModalBtn = document.getElementById('closeBookingModal');
+        const cancelBookingBtn = document.getElementById('cancelBookingBtn');
+        const submitBookingBtn = document.getElementById('submitBookingBtn');
+        const workerId = '@Model?.WorkerId';
+
+        bookNowBtn.addEventListener('click', () => {
+            bookingModal.classList.add('active');
+        });
+
+        closeBookingModalBtn.addEventListener('click', () => {
+            bookingModal.classList.remove('active');
+        });
+
+        cancelBookingBtn.addEventListener('click', () => {
+            bookingModal.classList.remove('active');
+        });
+
+        bookingModal.addEventListener('click', (e) => {
+            if (e.target === bookingModal) {
+                bookingModal.classList.remove('active');
+            }
+        });
+
+        submitBookingBtn.addEventListener('click', async () => {
+            const serviceDetails = document.getElementById('serviceDetails').value;
+            
+            if (!serviceDetails.trim()) {
+                alert('Please enter service details.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/booking/request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        workerId: workerId,
+                        serviceDetails: serviceDetails
+                    })
+                });
+
+                if (response.ok) {
+                    // Show success message
+                    const successModal = document.createElement('div');
+                    successModal.classList.add('modal-overlay', 'active');
+                    successModal.innerHTML = `
+                        <div class="modal-content" style="text-align: center; padding: 40px;">
+                            <ion-icon name="checkmark-circle-outline" style="font-size: 60px; color: #4CAF50; margin-bottom: 20px;"></ion-icon>
+                            <h2 style="color: #4CAF50; margin-bottom: 10px;">Request Sent!</h2>
+                            <p style="margin-bottom: 20px;">Your booking request has been sent to @Model?.FullName</p>
+                            <button class="modal-btn modal-btn-submit" onclick="this.closest('.modal-overlay').remove(); window.location.reload();">Close</button>
+                        </div>
+                    `;
+                    document.body.appendChild(successModal);
+                    bookingModal.classList.remove('active');
+                    document.getElementById('serviceDetails').value = '';
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + (error.message || 'Could not send booking request'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error sending booking request. Please try again.');
+            }
+        });
     </script>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>

@@ -1,6 +1,7 @@
 @{
     Layout = null;
 }
+@model List<APPDEV_PROJECT.Models.Entities.JobRequest>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,141 +45,87 @@
 
         <!-- Job Requests Grid -->
         <div class="requests-grid">
-            <!-- Request Card 1 -->
-            <div class="request-card">
-                <div class="card-content">
-                    <div class="profile-image">
-                        <div class="profile-placeholder"></div>
-                    </div>
-                    <div class="card-details">
-                        <div class="client-name">Kyle Bernido</div>
-                        <div class="detail-item">
-                            <ion-icon name="location-outline"></ion-icon>
-                            <span>Pasay City</span>
-                        </div>
-                        <div class="detail-item">
-                            <ion-icon name="build-outline"></ion-icon>
-                            <span>Aircon Repair</span>
-                        </div>
-                        <div class="request-message">
-                            "Need help fixing my aircon this weekend."
-                        </div>
-                    </div>
+            @if (Model == null || Model.Count == 0)
+            {
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #999;">
+                    <ion-icon name="inbox-outline" style="font-size: 60px; display: block; margin-bottom: 15px;"></ion-icon>
+                    <p style="font-size: 16px;">No incoming job requests yet.</p>
                 </div>
-                <div class="card-actions">
-                    <button class="btn btn-accept">Accept</button>
-                    <button class="btn btn-reject">Reject</button>
-                </div>
-            </div>
-
-            <!-- Request Card 2 -->
-            <div class="request-card">
-                <div class="card-content">
-                    <div class="profile-image">
-                        <div class="profile-placeholder"></div>
-                    </div>
-                    <div class="card-details">
-                        <div class="client-name">Kyle Bernido</div>
-                        <div class="detail-item">
-                            <ion-icon name="location-outline"></ion-icon>
-                            <span>Pasay City</span>
+            }
+            else
+            {
+                @foreach (var request in Model)
+                {
+                    <div class="request-card">
+                        <div class="card-content">
+                            <div class="profile-image">
+                                <div class="profile-placeholder"></div>
+                            </div>
+                            <div class="card-details">
+                                <div class="client-name">@request.Client?.FullName ?? "Unknown Client"</div>
+                                <div class="detail-item">
+                                    <ion-icon name="location-outline"></ion-icon>
+                                    <span>@(request.Client?.Address ?? "Location not specified")</span>
+                                </div>
+                                <div class="detail-item">
+                                    <ion-icon name="calendar-outline"></ion-icon>
+                                    <span>@request.RequestDate.ToString("MMM d, yyyy h:mm tt")</span>
+                                </div>
+                                <div class="request-message">
+                                    "@(request.ServiceDetails ?? "No details provided")"
+                                </div>
+                            </div>
                         </div>
-                        <div class="detail-item">
-                            <ion-icon name="build-outline"></ion-icon>
-                            <span>Aircon Repair</span>
-                        </div>
-                        <div class="request-message">
-                            "Need help fixing my aircon this weekend."
+                        <div class="card-actions">
+                            <button class="btn btn-accept" onclick="acceptRequest('@request.JobRequestId')">Accept</button>
+                            <button class="btn btn-reject" onclick="rejectRequest('@request.JobRequestId')">Reject</button>
                         </div>
                     </div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn btn-accept">Accept</button>
-                    <button class="btn btn-reject">Reject</button>
-                </div>
-            </div>
-
-            <!-- Request Card 3 -->
-            <div class="request-card">
-                <div class="card-content">
-                    <div class="profile-image">
-                        <div class="profile-placeholder"></div>
-                    </div>
-                    <div class="card-details">
-                        <div class="client-name">Kyle Bernido</div>
-                        <div class="detail-item">
-                            <ion-icon name="location-outline"></ion-icon>
-                            <span>Pasay City</span>
-                        </div>
-                        <div class="detail-item">
-                            <ion-icon name="build-outline"></ion-icon>
-                            <span>Aircon Repair</span>
-                        </div>
-                        <div class="request-message">
-                            "Need help fixing my aircon this weekend."
-                        </div>
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn btn-accept">Accept</button>
-                    <button class="btn btn-reject">Reject</button>
-                </div>
-            </div>
-
-            <!-- Request Card 4 -->
-            <div class="request-card">
-                <div class="card-content">
-                    <div class="profile-image">
-                        <div class="profile-placeholder"></div>
-                    </div>
-                    <div class="card-details">
-                        <div class="client-name">Kyle Bernido</div>
-                        <div class="detail-item">
-                            <ion-icon name="location-outline"></ion-icon>
-                            <span>Pasay City</span>
-                        </div>
-                        <div class="detail-item">
-                            <ion-icon name="build-outline"></ion-icon>
-                            <span>Aircon Repair</span>
-                        </div>
-                        <div class="request-message">
-                            "Need help fixing my aircon this weekend."
-                        </div>
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn btn-accept">Accept</button>
-                    <button class="btn btn-reject">Reject</button>
-                </div>
-            </div>
-
-            <!-- Request Card 5 -->
-            <div class="request-card">
-                <div class="card-content">
-                    <div class="profile-image">
-                        <div class="profile-placeholder"></div>
-                    </div>
-                    <div class="card-details">
-                        <div class="client-name">Kyle Bernido</div>
-                        <div class="detail-item">
-                            <ion-icon name="location-outline"></ion-icon>
-                            <span>Pasay City</span>
-                        </div>
-                        <div class="detail-item">
-                            <ion-icon name="build-outline"></ion-icon>
-                            <span>Aircon Repair</span>
-                        </div>
-                        <div class="request-message">
-                            "Need help fixing my aircon this weekend."
-                        </div>
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn btn-accept">Accept</button>
-                    <button class="btn btn-reject">Reject</button>
-                </div>
-            </div>
+                }
+            }
         </div>
     </div>
+
+    <script>
+        function acceptRequest(jobRequestId) {
+            if (confirm('Accept this job request?')) {
+                fetch(`/api/booking/accept/${jobRequestId}`, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Job request accepted!');
+                        location.reload();
+                    } else {
+                        alert('Error accepting request. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error accepting request. Please try again.');
+                });
+            }
+        }
+
+        function rejectRequest(jobRequestId) {
+            if (confirm('Reject this job request?')) {
+                fetch(`/api/booking/reject/${jobRequestId}`, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Job request rejected.');
+                        location.reload();
+                    } else {
+                        alert('Error rejecting request. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error rejecting request. Please try again.');
+                });
+            }
+        }
+    </script>
 </body>
 </html>

@@ -199,21 +199,23 @@ body {
 .buttons {
     display: flex;
     gap: 10px;
+    flex-direction: column;
 }
 
 .btn {
     flex: 1;
-    padding: 12px;
+    padding: 14px 16px;
     border: none;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    font-family: 'Poppins', sans-serif; 
+    font-family: 'Poppins', sans-serif;
+    min-height: 48px;
 }
 
 .btn-report {
