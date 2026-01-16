@@ -511,32 +511,45 @@ namespace APPDEV_PROJECT.Controllers
 
         public IActionResult ChatPage_W()
         {
-            // ===== Get the logged-in user's ID from claims =====
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-            
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            try
             {
-                return RedirectToAction("LoginPage", "Account");
-            }
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return RedirectToAction("LoginPage", "Account");
+                }
 
-            // ===== Get worker profile for the logged-in user =====
-            var worker = dbContext.Workers.FirstOrDefault(w => w.UserId == userId);
-            
-            if (worker == null)
+                // ===== Get worker profile for the logged-in user =====
+                var worker = dbContext.Workers.FirstOrDefault(w => w.UserId == userId);
+                
+                if (worker == null)
+                {
+                    return RedirectToAction("InfoPage_W");
+                }
+
+                // ===== Get conversations for this worker =====
+                // Filter out any conversations with NULL values to prevent SQL errors
+                var conversations = dbContext.Conversations
+                    .Where(c => c.WorkerId == worker.WorkerId && 
+                                c.ClientId != Guid.Empty && 
+                                c.WorkerId != Guid.Empty && 
+                                c.JobRequestId != Guid.Empty)  // Exclude NULL GUIDs
+                    .Include(c => c.Client)
+                    .OrderByDescending(c => c.CreatedAt)
+                    .ToList();
+
+                ViewBag.Conversations = conversations;
+
+                return View();
+            }
+            catch (Exception ex)
             {
-                return RedirectToAction("InfoPage_W");
+                // Log error and return empty list instead of crashing
+                ViewBag.Conversations = new List<Conversation>();
+                return View();
             }
-
-            // ===== Get conversations for this worker =====
-            var conversations = dbContext.Conversations
-                .Where(c => c.WorkerId == worker.WorkerId)
-                .Include(c => c.Client)
-                .OrderByDescending(c => c.CreatedAt)
-                .ToList();
-
-            ViewBag.Conversations = conversations;
-
-            return View();
         }
 
         // ===== NEW: View worker profile as Client (Read-Only) =====
@@ -553,6 +566,13 @@ namespace APPDEV_PROJECT.Controllers
                 {
                     return NotFound();
                 }
+
+                // ===== NEW: Get the worker's User record to check if active =====
+                var user = await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == worker.UserId);
+                
+                // ===== Check if worker is active =====
+                ViewBag.IsWorkerActive = user?.IsActive ?? true;
+                ViewBag.WorkerStatus = user?.IsActive == false ? "INACTIVE" : "ACTIVE";
 
                 // ===== Get reviews for this worker =====
                 var reviews = await dbContext.Reviews
@@ -595,14 +615,22 @@ namespace APPDEV_PROJECT.Controllers
                 }
 
                 // ===== Get conversations for this worker =====
+                // Filter out any conversations with NULL values to prevent SQL errors
                 var conversations = await dbContext.Conversations
-                    .Where(c => c.WorkerId == worker.WorkerId)
+                    .Where(c => c.WorkerId == worker.WorkerId && 
+                                c.ClientId != Guid.Empty && 
+                                c.WorkerId != Guid.Empty && 
+                                c.JobRequestId != Guid.Empty)  // Exclude NULL GUIDs
                     .Include(c => c.Client)
-                    .OrderByDescending(c => c.CreatedAt)
                     .ToListAsync();
 
+                // ===== Order in memory =====
+                var orderedConversations = conversations
+                    .OrderByDescending(c => c.CreatedAt)
+                    .ToList();
+
                 // ===== Transform to DTO with camelCase properties =====
-                var result = conversations.Select(c => new
+                var result = orderedConversations.Select(c => new
                 {
                     conversationId = c.ConversationId,
                     clientId = c.ClientId,
@@ -699,6 +727,15 @@ namespace APPDEV_PROJECT.Controllers
                 if (conversation == null)
                 {
                     return BadRequest(new { message = "Conversation not found" });
+                }
+
+                // ===== NEW: Check if worker is active =====
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.WorkerId == conversation.WorkerId);
+                var workerUser = await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == worker.UserId);
+                
+                if (workerUser?.IsActive == false)
+                {
+                    return BadRequest(new { message = "This worker is currently inactive and cannot receive messages" });
                 }
 
                 // ===== Create message =====

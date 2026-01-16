@@ -24,8 +24,10 @@ namespace APPDEV_PROJECT.Controllers
 
         // ===== LOGIN PAGE - GET REQUEST =====
         // Display the login form
-        public IActionResult LoginPage()
+        public async Task<IActionResult> LoginPage()
         {
+            // Ensure admin user exists
+            await EnsureAdminUserExists();
             return View();
         }
 
@@ -57,6 +59,14 @@ namespace APPDEV_PROJECT.Controllers
                 if (!AuthenticationHelper.VerifyPassword(model.Password, user.PasswordHash))
                 {
                     ModelState.AddModelError("", "Invalid email or password.");
+                    return View("LoginPage", model);
+                }
+
+                // ===== NEW: Check if user account is active =====
+                // Prevent deactivated users from logging in
+                if (!user.IsActive)
+                {
+                    ModelState.AddModelError("", "Your account has been deactivated.");
                     return View("LoginPage", model);
                 }
 
@@ -97,6 +107,10 @@ namespace APPDEV_PROJECT.Controllers
                 else if (model.UserType == "Worker")
                 {
                     return RedirectToAction("Profile_W", "Worker");
+                }
+                else if (model.UserType == "Admin")
+                {
+                    return RedirectToAction("ManageUsers", "Admin");
                 }
 
                 return RedirectToAction("LandingPage", "Home");
@@ -194,6 +208,38 @@ namespace APPDEV_PROJECT.Controllers
             // ===== Sign out removes the authentication cookie =====
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("LandingPage", "Home");
+        }
+
+        // ===== Helper method to ensure admin user exists =====
+        private async Task EnsureAdminUserExists()
+        {
+            try
+            {
+                var adminExists = await dbContext.Users.AnyAsync(u => u.Email == "admin@hanapbuhay.com" && u.UserType == "Admin");
+                
+                if (!adminExists)
+                {
+                    // Generate a fresh hash for password "Admin@123"
+                    var freshHash = AuthenticationHelper.HashPassword("Admin@123");
+                    
+                    var adminUser = new User
+                    {
+                        UserId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                        Email = "admin@hanapbuhay.com",
+                        UserType = "Admin",
+                        PasswordHash = freshHash,
+                        CreatedAt = DateTime.UtcNow,
+                        IsActive = true
+                    };
+
+                    dbContext.Users.Add(adminUser);
+                    await dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error ensuring admin user exists: {ex.Message}");
+            }
         }
     }
 }

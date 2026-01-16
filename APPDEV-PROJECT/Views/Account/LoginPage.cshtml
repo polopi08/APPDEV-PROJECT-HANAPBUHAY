@@ -65,7 +65,7 @@
 
                     <button type="submit" class="btn-login">Log In</button>
 
-                    <p class="register-link">
+                    <p class="register-link" id="registerLink">
                         Don't have an account? <a href="@Url.Action("RegisterPage", "Account")">Register</a>
                     </p>
                 </form>
@@ -77,10 +77,16 @@
         window.addEventListener('DOMContentLoaded', () => {
             const userRole = sessionStorage.getItem('userRole');
             const userTypeInput = document.getElementById('userType');
+            const registerLink = document.getElementById('registerLink');
             
             if (userRole) {
                 const capitalizedRole = userRole.charAt(0).toUpperCase() + userRole.slice(1);
                 userTypeInput.value = capitalizedRole;
+                
+                // Hide register link for admin users
+                if (userRole.toLowerCase() === 'admin') {
+                    registerLink.style.display = 'none';
+                }
             }
         });
     </script>

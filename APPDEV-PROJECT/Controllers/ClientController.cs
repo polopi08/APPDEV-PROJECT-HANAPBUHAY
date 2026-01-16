@@ -27,8 +27,12 @@ namespace APPDEV_PROJECT.Controllers
         {
             try
             {
-                // ===== Fetch actual workers from database =====
-                var workers = await dbContext.Workers.ToListAsync();
+                // ===== Fetch active workers from database =====
+                // NEW: Join with Users table to filter only active workers
+                var workers = await (from w in dbContext.Workers
+                                    join u in dbContext.Users on w.UserId equals u.UserId
+                                    where u.IsActive == true  // Only include active workers
+                                    select w).ToListAsync();
 
                 // ===== Convert to objects with worker coordinates =====
                 var workersWithDistance = workers.Select(w => new
@@ -104,6 +108,13 @@ namespace APPDEV_PROJECT.Controllers
                 if (worker == null)
                 {
                     return BadRequest(new { message = "Worker not found" });
+                }
+
+                // ===== NEW: Check if worker is active =====
+                var workerUser = await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == worker.UserId);
+                if (workerUser?.IsActive == false)
+                {
+                    return BadRequest(new { message = "This worker is currently inactive and cannot accept bookings" });
                 }
 
                 // ===== Create job request =====

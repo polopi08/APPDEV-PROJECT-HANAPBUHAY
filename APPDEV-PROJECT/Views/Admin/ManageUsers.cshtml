@@ -1,0 +1,547 @@
+@model List<APPDEV_PROJECT.Models.Entities.User>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HanapBuhay - Manage Users</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FCECC9;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(to right, #FEF8EE, #F6C27B);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.20);
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+
+        .header-container {
+            max-width: 1300px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo img {
+            height: 75px;
+            width: auto;
+            display: block;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .header-nav a {
+            color: #431405;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .header-nav a:hover {
+            color: #460F02;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #460F02;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #431405;
+            font-size: 14px;
+        }
+
+        /* Table Styles */
+        .table-wrapper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(to right, #FEF8EE, #F6C27B);
+            border-bottom: 2px solid #E6B85C;
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            color: #460F02;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #E8E8E8;
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #FCECC9;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 14px 16px;
+            color: #333;
+            font-size: 13px;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: #D4EDDA;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background-color: #F8D7DA;
+            color: #721C24;
+        }
+
+        .user-type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .user-type-client {
+            background-color: #E2F0FE;
+            color: #1E40AF;
+        }
+
+        .user-type-worker {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .user-type-admin {
+            background-color: #FCE7F3;
+            color: #831843;
+        }
+
+        /* Actions */
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-edit {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        .btn-edit:hover {
+            background-color: #FFB300;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background-color: #DC3545;
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background-color: #C82333;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            color: #460F02;
+            margin-bottom: 10px;
+        }
+
+        /* Search and Filter */
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #DDD;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #DDD;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            background-color: white;
+        }
+
+        /* Confirmation Dialog */
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .confirmation-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirmation-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @@keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .confirmation-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #E6B85C;
+        }
+
+        .confirmation-header h2 {
+            color: #DC3545;
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .confirmation-body {
+            margin-bottom: 25px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .confirmation-body p {
+            margin: 10px 0;
+        }
+
+        .confirmation-email {
+            font-weight: 600;
+            color: #460F02;
+            word-break: break-all;
+        }
+
+        .confirmation-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-confirm-delete {
+            background-color: #DC3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm-delete:hover {
+            background-color: #C82333;
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel-delete {
+            background-color: #6C757D;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel-delete:hover {
+            background-color: #5A6268;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        @@keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background-color: #D4EDDA;
+            color: #155724;
+            border: 1px solid #C3E6CB;
+        }
+
+        .alert-error {
+            background-color: #F8D7DA;
+            color: #721C24;
+            border: 1px solid #F5C6CB;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="~/Images/HanapBuhay_Logo.png" alt="HanapBuhay Logo">
+            </div>
+            <nav class="header-nav">
+                
+                <a href="@Url.Action("Logout", "Account")">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1>Manage Users</h1>
+            <p>View and manage all registered users on the platform</p>
+        </div>
+
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="empty-state">
+                <h3>No users found</h3>
+                <p>There are currently no users registered on the platform.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>User Type</th>
+                            <th>Created At</th>
+                            <th>Last Login</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.Email</td>
+                                <td>
+                                    <span class="user-type-badge user-type-@user.UserType.ToLower()">
+                                        @user.UserType
+                                    </span>
+                                </td>
+                                <td>@user.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                                <td>
+                                    @if (user.LastLoginAt.HasValue)
+                                    {
+                                        @user.LastLoginAt.Value.ToString("MMM dd, yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #999;">Never</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="status-badge @(user.IsActive ? "status-active" : "status-inactive")">
+                                        @(user.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td class="actions-cell">
+                                    <button class="action-btn btn-delete" onclick="deleteUser('@user.UserId', '@user.Email')">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="confirmationModal" class="confirmation-modal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h2>Confirm Deletion</h2>
+            </div>
+            <div class="confirmation-body">
+                <p>Are you sure you want to delete this user?</p>
+                <p>User Email: <span class="confirmation-email" id="confirmEmail"></span></p>
+                <p style="color: #DC3545; font-weight: 600; margin-top: 15px;">Warning! This action will deactivate the user account and they will no longer be able to log in.</p>
+            </div>
+            <div class="confirmation-footer">
+                <button type="button" class="btn-cancel-delete" onclick="cancelDelete()">Cancel</button>
+                <button type="button" class="btn-confirm-delete" onclick="confirmDelete()">Delete User</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pendingDeleteUserId = null;
+        let pendingDeleteEmail = null;
+
+        function deleteUser(userId, email) {
+            pendingDeleteUserId = userId;
+            pendingDeleteEmail = email;
+            document.getElementById('confirmEmail').textContent = email;
+            document.getElementById('confirmationModal').classList.add('show');
+        }
+
+        function cancelDelete() {
+            document.getElementById('confirmationModal').classList.remove('show');
+            pendingDeleteUserId = null;
+            pendingDeleteEmail = null;
+        }
+
+        async function confirmDelete() {
+            if (!pendingDeleteUserId) return;
+
+            try {
+                const response = await fetch(`/Admin/DeleteUser/${pendingDeleteUserId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    cancelDelete();
+                    // Show success message and reload
+                    alert('User has been deactivated successfully!');
+                    location.reload();
+                } else {
+                    alert(data.message || 'Error deleting user');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('confirmationModal');
+            if (event.target === modal) {
+                cancelDelete();
+            }
+        }
+    </script>
+
+</body>
+</html>

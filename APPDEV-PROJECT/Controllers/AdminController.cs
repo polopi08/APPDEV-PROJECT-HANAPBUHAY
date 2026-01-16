@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using APPDEV_PROJECT.Data;
 using APPDEV_PROJECT.Models.Entities;
+using APPDEV_PROJECT.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -32,12 +33,105 @@ namespace APPDEV_PROJECT.Controllers
             return null;
         }
 
+        // ===== Helper method to ensure admin user exists =====
+        private async Task EnsureAdminExists()
+        {
+            var adminExists = await dbContext.Users.AnyAsync(u => u.Email == "admin@hanapbuhay.com" && u.UserType == "Admin");
+            
+            if (!adminExists)
+            {
+                // Generate a fresh hash for password "Admin@123"
+                var freshHash = AuthenticationHelper.HashPassword("Admin@123");
+                
+                var adminUser = new User
+                {
+                    UserId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                    Email = "admin@hanapbuhay.com",
+                    UserType = "Admin",
+                    PasswordHash = freshHash,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true
+                };
+
+                dbContext.Users.Add(adminUser);
+                await dbContext.SaveChangesAsync();
+            }
+        }
+
         public IActionResult DashboardPage_A()
         {
             var notAdminResult = RedirectIfNotAdmin();
             if (notAdminResult != null) return notAdminResult;
 
             return View();
+        }
+
+        public IActionResult Dashboard_A()
+        {
+            var notAdminResult = RedirectIfNotAdmin();
+            if (notAdminResult != null) return notAdminResult;
+
+            return View();
+        }
+
+        public async Task<IActionResult> ManageUsers()
+        {
+            var notAdminResult = RedirectIfNotAdmin();
+            if (notAdminResult != null) return notAdminResult;
+
+            try
+            {
+                var users = await dbContext.Users
+                    .OrderByDescending(u => u.CreatedAt)
+                    .ToListAsync();
+
+                return View(users);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error loading users: {ex.Message}");
+                return View(new List<User>());
+            }
+        }
+
+        // ===== NEW: Delete User (Soft Delete - Deactivate) =====
+        [HttpPost]
+        [Route("Admin/DeleteUser/{userId}")]
+        public async Task<IActionResult> DeleteUser(Guid userId)
+        {
+            try
+            {
+                var notAdminCheck = RedirectIfNotAdmin();
+                if (notAdminCheck != null)
+                {
+                    return Unauthorized(new { message = "Admin access required" });
+                }
+
+                var user = await dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+                if (user == null)
+                {
+                    return NotFound(new { message = "User not found" });
+                }
+
+                // Prevent deleting the main admin user
+                if (user.Email == "admin@hanapbuhay.com")
+                {
+                    return BadRequest(new { message = "Cannot delete the main admin user" });
+                }
+
+                // Soft delete: Set IsActive to false
+                user.IsActive = false;
+
+                dbContext.Users.Update(user);
+                await dbContext.SaveChangesAsync();
+
+                return Ok(new { message = "User has been deactivated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Error deleting user: {ex.Message}" });
+            }
         }
 
         public IActionResult AppMan_A()

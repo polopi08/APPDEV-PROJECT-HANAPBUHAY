@@ -105,6 +105,14 @@
                     <div class="title">@Model.Skill</div>
                     <div class="location">@Model.Address</div>
 
+                    <!-- ===== NEW: Show INACTIVE badge if worker is inactive ===== -->
+                    @if (ViewBag.IsWorkerActive == false)
+                    {
+                        <div style="background-color: #ffebee; border: 1px solid #f44336; color: #c62828; padding: 10px 12px; border-radius: 4px; margin: 12px 0; font-weight: 500; text-align: center;">
+                            <ion-icon name="alert-circle-outline"></ion-icon> INACTIVE - This worker is currently not accepting bookings
+                        </div>
+                    }
+
                     <div class="stats">
                         <div class="stat">
                             <div class="stat-value">@Model.CompletedJobs</div>
@@ -121,10 +129,7 @@
                     </div>
 
                     <div class="buttons">
-                        <button class="btn btn-report" id="reportBtn">
-                            <ion-icon name="alert-circle-outline"></ion-icon> Report
-                        </button>
-                        <button class="btn btn-contact" id="bookNowBtn">
+                        <button class="btn btn-contact" id="bookNowBtn" @(ViewBag.IsWorkerActive == false ? "disabled" : "")>
                             <ion-icon name="calendar-outline"></ion-icon> Book Now
                         </button>
                         <button class="btn btn-contact" onclick="openContactModal()">
@@ -215,83 +220,6 @@
         </div>
     </div>
 
-    <!-- Report Modal -->
-    <div class="modal-overlay" id="reportModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Report Content</h2>
-                <button class="modal-close" id="closeModal">
-                    <ion-icon name="close-outline"></ion-icon>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="report-question">What are you reporting?</div>
-                <div class="reason-grid">
-                    <button class="reason-btn" data-reason="inappropriate">
-                        <ion-icon name="warning-outline"></ion-icon>
-                        Inappropriate Content
-                    </button>
-                    <button class="reason-btn" data-reason="misleading">
-                        <ion-icon name="alert-outline"></ion-icon>
-                        Misleading Info
-                    </button>
-                    <button class="reason-btn" data-reason="scam">
-                        <ion-icon name="shield-outline"></ion-icon>
-                        Scam
-                    </button>
-                    <button class="reason-btn" data-reason="spam">
-                        <ion-icon name="mail-outline"></ion-icon>
-                        Spam or Ads
-                    </button>
-                    <button class="reason-btn" data-reason="fake">
-                        <ion-icon name="person-outline"></ion-icon>
-                        Fake Profile
-                    </button>
-                    <button class="reason-btn" data-reason="harassment">
-                        <ion-icon name="hand-left-outline"></ion-icon>
-                        Harassment
-                    </button>
-                    <button class="reason-btn" data-reason="violence">
-                        <ion-icon name="pulse-outline"></ion-icon>
-                        Violence/Threats
-                    </button>
-                    <button class="reason-btn" data-reason="other">
-                        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
-                        Other
-                    </button>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Content type</label>
-                    <select class="form-select">
-                        <option>Select content type</option>
-                        <option>Profile Information</option>
-                        <option>Service Description</option>
-                        <option>Reviews</option>
-                        <option>Photos</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-textarea" placeholder="Provide specific details about what you're reporting..."></textarea>
-                </div>
-
-                <div class="important-notice">
-                    <ion-icon name="information-circle-outline"></ion-icon>
-                    <div class="notice-text">
-                        <strong>Important Notice:</strong> False reports may result in account suspension. Please report content that violates our community guidelines.
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="modal-btn modal-btn-cancel" id="cancelBtn">Cancel</button>
-                    <button class="modal-btn modal-btn-submit">Submit Report</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Contact Modal -->
     <div class="modal-overlay" id="contactModal">
         <div class="modal-content">
@@ -349,38 +277,6 @@
     </div>
 
     <script>
-        // Report Modal functionality
-        const reportBtn = document.getElementById('reportBtn');
-        const modal = document.getElementById('reportModal');
-        const closeModal = document.getElementById('closeModal');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const reasonBtns = document.querySelectorAll('.reason-btn');
-
-        reportBtn.addEventListener('click', () => {
-            modal.classList.add('active');
-        });
-
-        closeModal.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
-
-        cancelBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
-
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-            }
-        });
-
-        reasonBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                reasonBtns.forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-            });
-        });
-
         // Contact Modal functionality
         const contactModal = document.getElementById('contactModal');
         const closeContactModalBtn = document.getElementById('closeContactModal');
@@ -419,8 +315,13 @@
         const cancelBookingBtn = document.getElementById('cancelBookingBtn');
         const submitBookingBtn = document.getElementById('submitBookingBtn');
         const workerId = '@Model?.WorkerId';
+        const isWorkerActive = @(ViewBag.IsWorkerActive == false ? "false" : "true");
 
         bookNowBtn.addEventListener('click', () => {
+            if (!isWorkerActive) {
+                alert('This worker is currently inactive and cannot accept bookings.');
+                return;
+            }
             bookingModal.classList.add('active');
         });
 
