@@ -83,10 +83,45 @@
         </div>
     </div>
 
+    <!-- Rating Modal -->
+    <div id="ratingModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Rate This Work</h2>
+                <button class="modal-close" id="closeRatingBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>How was your experience with this worker?</p>
+                
+                <!-- Star Rating -->
+                <div class="rating-stars" id="starRating">
+                    <span class="star" data-rating="1">?</span>
+                    <span class="star" data-rating="2">?</span>
+                    <span class="star" data-rating="3">?</span>
+                    <span class="star" data-rating="4">?</span>
+                    <span class="star" data-rating="5">?</span>
+                </div>
+                
+                <p id="ratingText" style="font-size: 12px; color: #999; margin-top: 10px;">Click a star to rate</p>
+                
+                <!-- Review Text -->
+                <textarea id="reviewText" class="review-textarea" placeholder="Write your review (optional)" style="margin-top: 15px;"></textarea>
+                
+                <!-- Buttons -->
+                <div style="margin-top: 20px;">
+                    <button id="submitReviewBtn" class="btn-confirm">Submit Review</button>
+                    <button id="cancelReviewBtn" class="btn-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentConversationId = null;
         let messageRefreshInterval = null;
         let lastLoadedMessageCount = 0;
+        let selectedRating = 0;
+        let currentJobRequestId = null;
         
         const chatWindowHeader = document.querySelector('.current-chat-info h3');
         const chatMessages = document.querySelector('.chat-messages');
@@ -94,6 +129,9 @@
         const sendBtn = document.querySelector('.send-btn');
         const searchInput = document.querySelector('.search-input');
         const chatList = document.querySelector('.chat-list');
+        const ratingModal = document.getElementById('ratingModal');
+        const stars = document.querySelectorAll('.star');
+        const ratingText = document.getElementById('ratingText');
 
         // Load conversations from database
         function loadConversations(search = '') {
@@ -223,61 +261,195 @@
             messageRefreshInterval = setInterval(() => {
                 loadMessages(conversationId, false);
             }, 2000);
+
+            // ===== NEW: Check job status and show rating if needed =====
+            checkJobStatus(conversationId);
         }
 
-        // Send message function
-        function sendMessage() {
-            const messageText = chatInput.value.trim();
+        // ===== NEW: Check if job is completed and show rating modal =====
+        function checkJobStatus(conversationId) {
+            fetch(`/api/client/job-status/${conversationId}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Could not check job status');
+                })
+                .then(data => {
+                    currentJobRequestId = data.jobRequestId;
+                    
+                    // Show rating modal only if job is completed and not yet reviewed
+                    if (data.status === 'Completed' && !data.hasReview) {
+                        showRatingModal();
+                    } else if (data.status === 'Reviewed') {
+                        // Job already reviewed, hide any rating prompts
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking job status:', error);
+                });
+        }
 
-            if (messageText === '' || !currentConversationId) {
-                if (!currentConversationId) {
-                    alert('Please select a conversation first');
+        // ===== NEW: Show rating modal =====
+        function showRatingModal() {
+            ratingModal.style.display = 'flex';
+            resetRating();
+        }
+
+        // ===== NEW: Hide rating modal =====
+        function hideRatingModal() {
+            ratingModal.style.display = 'none';
+        }
+
+        // ===== NEW: Reset rating =====
+        function resetRating() {
+            selectedRating = 0;
+            stars.forEach(star => {
+                star.classList.remove('selected');
+                star.style.color = '#ccc';
+            });
+            ratingText.textContent = 'Click a star to rate';
+            document.getElementById('reviewText').value = '';
+        }
+
+        // ===== NEW: Star rating click handler =====
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                selectedRating = parseInt(this.getAttribute('data-rating'));
+                
+                stars.forEach((s, index) => {
+                    if (index < selectedRating) {
+                        s.classList.add('selected');
+                        s.style.color = '#FFD700';
+                    } else {
+                        s.classList.remove('selected');
+                        s.style.color = '#ccc';
+                    }
+                });
+                
+                const ratingTexts = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                ratingText.textContent = ratingTexts[selectedRating];
+            });
+
+            // Hover effect
+            star.addEventListener('mouseover', function() {
+                const hoverRating = parseInt(this.getAttribute('data-rating'));
+                stars.forEach((s, index) => {
+                    if (index < hoverRating) {
+                        s.style.color = '#FFD700';
+                    } else {
+                        s.style.color = '#ccc';
+                    }
+                });
+            });
+        });
+
+        // Hover out effect
+        document.getElementById('starRating').addEventListener('mouseout', function() {
+            stars.forEach((s, index) => {
+                if (index < selectedRating) {
+                    s.style.color = '#FFD700';
+                } else {
+                    s.style.color = '#ccc';
                 }
+            });
+        });
+
+        // ===== NEW: Submit review =====
+        document.getElementById('submitReviewBtn').addEventListener('click', async function() {
+            if (selectedRating === 0) {
+                alert('Please select a star rating');
                 return;
             }
 
-            // Disable send button
+            const reviewText = document.getElementById('reviewText').value.trim();
+
+            try {
+                const response = await fetch('/api/client/submit-review', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        JobRequestId: currentJobRequestId,
+                        Rating: selectedRating,
+                        ReviewText: reviewText
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Thank you for your review!');
+                    hideRatingModal();
+                    // Reload conversations to update status
+                    loadConversations();
+                } else {
+                    alert('Error submitting review. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error submitting review');
+            }
+        });
+
+        // ===== NEW: Cancel review =====
+        document.getElementById('cancelReviewBtn').addEventListener('click', function() {
+            hideRatingModal();
+        });
+
+        // ===== NEW: Close rating modal =====
+        document.getElementById('closeRatingBtn').addEventListener('click', function() {
+            hideRatingModal();
+        });
+
+        // ===== NEW: Send message function =====
+        async function sendMessage() {
+            if (!currentConversationId) {
+                alert('Please select a conversation first');
+                return;
+            }
+
+            const messageText = chatInput.value.trim();
+
+            if (messageText === '') return;
+
             sendBtn.disabled = true;
 
-            fetch('/api/client/messages/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ConversationId: currentConversationId,
-                    Content: messageText
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        throw new Error(data.error || data.message || 'Failed to send message');
-                    });
+            try {
+                const response = await fetch('/api/client/messages/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        ConversationId: currentConversationId,
+                        Content: messageText
+                    })
+                });
+
+                if (response.ok) {
+                    chatInput.value = '';
+                    // Force reload messages after sending
+                    setTimeout(() => {
+                        loadMessages(currentConversationId, true);
+                    }, 100);
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    alert('Error sending message');
                 }
-                return response.json();
-            })
-            .then(result => {
-                chatInput.value = '';
-                // Force reload messages after sending
-                setTimeout(() => {
-                    loadMessages(currentConversationId, true);
-                }, 100);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error: ' + error.message);
-            })
-            .finally(() => {
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Error sending message: ' + error.message);
+            } finally {
                 sendBtn.disabled = false;
                 chatInput.focus();
-            });
+            }
         }
 
-        // Send button click
+        // ===== Send button click event =====
         sendBtn.addEventListener('click', sendMessage);
 
-        // Send message with Enter key
+        // ===== Send message with Enter key =====
         chatInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !sendBtn.disabled) {
                 e.preventDefault();
@@ -285,13 +457,13 @@
             }
         });
 
+        // Load conversations on page load
+        loadConversations();
+
         // Search conversations
         searchInput.addEventListener('input', function() {
             loadConversations(this.value);
         });
-
-        // Load conversations on page load
-        loadConversations();
 
         // Cleanup interval when leaving page
         window.addEventListener('beforeunload', function() {

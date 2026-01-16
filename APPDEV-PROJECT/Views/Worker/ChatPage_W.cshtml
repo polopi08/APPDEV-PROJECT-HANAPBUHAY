@@ -48,27 +48,7 @@
             </div>
 
             <div class="chat-list">
-                @if (ViewBag.Conversations != null && ((List<APPDEV_PROJECT.Models.Entities.Conversation>)ViewBag.Conversations).Count > 0)
-                {
-                    @foreach (var conversation in (List<APPDEV_PROJECT.Models.Entities.Conversation>)ViewBag.Conversations)
-                    {
-                        <div class="chat-item" data-conversation-id="@conversation.ConversationId" data-client-name="@(conversation.Client != null ? $"{conversation.Client.FName} {conversation.Client.LName}" : "Client")">
-                            <div class="chat-avatar" style="background: #FFE5B4;">
-                                <ion-icon name="person-outline"></ion-icon>
-                            </div>
-                            <div class="chat-info">
-                                <div class="chat-name">@(conversation.Client != null ? $"{conversation.Client.FName} {conversation.Client.LName}" : "Client")</div>
-                                <div class="chat-preview">Click to view messages</div>
-                            </div>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <div style="text-align: center; padding: 20px; color: #999;">
-                        <p>No active conversations yet.</p>
-                    </div>
-                }
+                <!-- Conversations will be loaded dynamically -->
             </div>
         </div>
 
@@ -99,56 +79,129 @@
                 <button class="send-btn">
                     <ion-icon name="send-outline"></ion-icon>
                 </button>
+                <button class="work-done-btn" id="workDoneBtn" style="display: none;">
+                    <ion-icon name="checkmark-done-outline"></ion-icon>
+                    Work Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Work Done Modal -->
+    <div id="workDoneModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Mark Work as Complete</h2>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to mark this job as complete? The client will be able to review your work.</p>
+                <button id="confirmWorkDoneBtn" class="btn-confirm">Confirm</button>
+                <button id="cancelWorkDoneBtn" class="btn-cancel">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
         // Get all chat items
-        const chatItems = document.querySelectorAll('.chat-item');
         const chatWindowHeader = document.querySelector('.current-chat-info h3');
         const chatMessages = document.querySelector('.chat-messages');
         const chatInput = document.querySelector('.chat-input');
         const sendBtn = document.querySelector('.send-btn');
+        const chatList = document.querySelector('.chat-list');
         let selectedConversationId = null;
         let lastLoadedMessageCount = 0;
         let messageRefreshInterval = null;
 
-        // Add click event to each chat item
-        chatItems.forEach(item => {
-            item.addEventListener('click', async function() {
-                // Remove active class from all items
-                chatItems.forEach(el => {
-                    el.classList.remove('active');
-                    el.style.background = '';
+        // ===== NEW: Work Done button elements =====
+        const workDoneBtn = document.getElementById('workDoneBtn');
+        const workDoneModal = document.getElementById('workDoneModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const confirmWorkDoneBtn = document.getElementById('confirmWorkDoneBtn');
+        const cancelWorkDoneBtn = document.getElementById('cancelWorkDoneBtn');
+        let selectedJobRequestId = null;
+
+        // ===== Load conversations dynamically =====
+        function loadConversations() {
+            fetch('/api/worker/conversations')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(conversations => {
+                    chatList.innerHTML = '';
+                    
+                    if (!conversations || conversations.length === 0) {
+                        chatList.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">No active conversations yet.</div>';
+                        return;
+                    }
+                    
+                    conversations.forEach(conv => {
+                        const chatItem = document.createElement('div');
+                        chatItem.className = 'chat-item';
+                        chatItem.setAttribute('data-conversation-id', conv.conversationId);
+                        chatItem.setAttribute('data-client-name', conv.clientName || 'Client');
+                        
+                        chatItem.innerHTML = `
+                            <div class="chat-avatar" style="background: #FFE5B4;">
+                                <ion-icon name="person-outline"></ion-icon>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-name">${conv.clientName || 'Client'}</div>
+                                <div class="chat-preview">Click to view messages</div>
+                            </div>
+                        `;
+                        
+                        // ===== Attach click listener immediately when creating the item =====
+                        chatItem.addEventListener('click', async function() {
+                            // Remove active class from all items
+                            document.querySelectorAll('.chat-item').forEach(el => {
+                                el.classList.remove('active');
+                                el.style.background = '';
+                            });
+
+                            // Add active class to clicked item
+                            this.classList.add('active');
+                            this.style.background = '#FFF8E7';
+
+                            // Get conversation ID and client name
+                            selectedConversationId = this.getAttribute('data-conversation-id');
+                            const clientName = this.getAttribute('data-client-name');
+                            
+                            // Update the chat window header
+                            chatWindowHeader.textContent = clientName;
+                            lastLoadedMessageCount = 0;
+
+                            // Clear previous interval
+                            if (messageRefreshInterval) {
+                                clearInterval(messageRefreshInterval);
+                            }
+
+                            // Load messages immediately
+                            loadMessages(selectedConversationId, true);
+
+                            // Auto-refresh messages every 2 seconds
+                            messageRefreshInterval = setInterval(() => {
+                                loadMessages(selectedConversationId, false);
+                            }, 2000);
+
+                            // ===== Check job status and show/hide Work Done button =====
+                            await checkJobStatus(selectedConversationId);
+                        });
+                        
+                        chatList.appendChild(chatItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading conversations:', error);
+                    chatList.innerHTML = '<div style="padding: 20px; color: #d9534f;">Error loading conversations</div>';
                 });
+        }
 
-                // Add active class to clicked item
-                this.classList.add('active');
-                this.style.background = '#FFF8E7';
-
-                // Get conversation ID and client name
-                selectedConversationId = this.getAttribute('data-conversation-id');
-                const clientName = this.getAttribute('data-client-name');
-                
-                // Update the chat window header
-                chatWindowHeader.textContent = clientName;
-                lastLoadedMessageCount = 0;
-
-                // Clear previous interval
-                if (messageRefreshInterval) {
-                    clearInterval(messageRefreshInterval);
-                }
-
-                // Load messages immediately
-                loadMessages(selectedConversationId, true);
-
-                // Auto-refresh messages every 2 seconds
-                messageRefreshInterval = setInterval(() => {
-                    loadMessages(selectedConversationId, false);
-                }, 2000);
-            });
-        });
+        // Load conversations on initial page load
+        loadConversations();
 
         // Load messages function
         function loadMessages(conversationId, forceRefresh = false) {
@@ -255,6 +308,86 @@
             }
         });
 
+        // Work Done button click
+        workDoneBtn.addEventListener('click', function() {
+            const modal = document.getElementById('workDoneModal');
+            modal.style.display = 'block';
+        });
+
+        // Close modal
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            const modal = document.getElementById('workDoneModal');
+            modal.style.display = 'none';
+        });
+
+        // Confirm Work Done
+        document.getElementById('confirmWorkDoneBtn').addEventListener('click', async function() {
+            const modal = document.getElementById('workDoneModal');
+            modal.style.display = 'none';
+
+            // Add your logic here to handle work done action
+            alert('Work has been marked as complete');
+        });
+
+        // Cancel Work Done
+        document.getElementById('cancelWorkDoneBtn').addEventListener('click', function() {
+            const modal = document.getElementById('workDoneModal');
+            modal.style.display = 'none';
+        });
+
+        // ===== NEW: Check job status and show/hide Work Done button =====
+        async function checkJobStatus(conversationId) {
+            try {
+                const response = await fetch(`/api/worker/job-status/${conversationId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    selectedJobRequestId = data.jobRequestId;
+                    
+                    // Show Work Done button only if job status is "Accepted"
+                    if (data.status === 'Accepted') {
+                        workDoneBtn.style.display = 'flex';
+                    } else {
+                        workDoneBtn.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking job status:', error);
+                workDoneBtn.style.display = 'none';
+            }
+        }
+
+        // ===== NEW: Mark work as done and complete job =====
+        async function markWorkAsDone() {
+            if (!selectedJobRequestId) {
+                alert('Job request not found');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/worker/mark-work-done/${selectedJobRequestId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    alert('Work marked as complete! The client can now review your work.');
+                    workDoneBtn.style.display = 'none';
+                    location.reload();
+                } else {
+                    alert('Error marking work as complete. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error marking work as complete');
+            }
+        }
+
+        // Confirm Work Done
+        document.getElementById('confirmWorkDoneBtn').addEventListener('click', async function() {
+            const modal = document.getElementById('workDoneModal');
+            modal.style.display = 'none';
+            await markWorkAsDone();
+        });
+
         // Cleanup interval when leaving page
         window.addEventListener('beforeunload', function() {
             if (messageRefreshInterval) {
@@ -263,4 +396,4 @@
         });
     </script>
 </body>
-</html>
+</html></html></html></html>

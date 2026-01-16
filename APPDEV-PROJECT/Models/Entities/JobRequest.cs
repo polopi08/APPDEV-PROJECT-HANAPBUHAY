@@ -11,7 +11,7 @@ namespace APPDEV_PROJECT.Models.Entities
         // Request details
         public string ServiceDetails { get; set; }
         public DateTime RequestDate { get; set; }
-        public string Status { get; set; } = "Pending"; // Pending, Accepted, Rejected
+        public string Status { get; set; } = "Pending"; // Pending, Accepted, Rejected, Completed, Reviewed
 
         // Navigation properties
         public Client? Client { get; set; }

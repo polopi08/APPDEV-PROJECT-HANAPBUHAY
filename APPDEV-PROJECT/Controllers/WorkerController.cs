@@ -169,6 +169,15 @@ namespace APPDEV_PROJECT.Controllers
                     return RedirectToAction("InfoPage_W");
                 }
 
+                // ===== NEW: Get reviews for this worker =====
+                var reviews = await dbContext.Reviews
+                    .Where(r => r.WorkerId == worker.WorkerId)
+                    .Include(r => r.Client)
+                    .OrderByDescending(r => r.CreatedAt)
+                    .ToListAsync();
+
+                ViewBag.Reviews = reviews;
+
                 return View(worker);
             }
             catch (Exception ex)
@@ -552,6 +561,52 @@ namespace APPDEV_PROJECT.Controllers
             }
         }
 
+        // ===== NEW: Get conversations for worker =====
+        [HttpGet]
+        [Route("api/worker/conversations")]
+        public async Task<IActionResult> GetConversations()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
+                
+                if (worker == null)
+                {
+                    return BadRequest(new { message = "Worker profile not found" });
+                }
+
+                // ===== Get conversations for this worker =====
+                var conversations = await dbContext.Conversations
+                    .Where(c => c.WorkerId == worker.WorkerId)
+                    .Include(c => c.Client)
+                    .OrderByDescending(c => c.CreatedAt)
+                    .ToListAsync();
+
+                // ===== Transform to DTO with camelCase properties =====
+                var result = conversations.Select(c => new
+                {
+                    conversationId = c.ConversationId,
+                    clientId = c.ClientId,
+                    clientName = c.Client != null ? $"{c.Client.FName} {c.Client.LName}" : "Client",
+                    jobRequestId = c.JobRequestId,
+                    createdAt = c.CreatedAt
+                }).ToList();
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         // ===== NEW: Get messages for a conversation =====
         [HttpGet]
         [Route("api/worker/messages/{conversationId}")]
@@ -666,6 +721,102 @@ namespace APPDEV_PROJECT.Controllers
         {
             public string ConversationId { get; set; }
             public string Content { get; set; }
+        }
+
+        // ===== NEW: Get job status for a conversation =====
+        [HttpGet]
+        [Route("api/worker/job-status/{conversationId}")]
+        public async Task<IActionResult> GetJobStatus(Guid conversationId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
+                
+                if (worker == null)
+                {
+                    return BadRequest(new { message = "Worker profile not found" });
+                }
+
+                var conversation = await dbContext.Conversations
+                    .FirstOrDefaultAsync(c => c.ConversationId == conversationId && c.WorkerId == worker.WorkerId);
+                
+                if (conversation == null)
+                {
+                    return BadRequest(new { message = "Conversation not found" });
+                }
+
+                var jobRequest = await dbContext.JobRequests
+                    .FirstOrDefaultAsync(j => j.JobRequestId == conversation.JobRequestId);
+                
+                if (jobRequest == null)
+                {
+                    return BadRequest(new { message = "Job request not found" });
+                }
+
+                return Ok(new 
+                { 
+                    jobRequestId = jobRequest.JobRequestId,
+                    status = jobRequest.Status
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        // ===== NEW: Mark work as done and increase worker's completed jobs =====
+        [HttpPost]
+        [Route("api/worker/mark-work-done/{jobRequestId}")]
+        public async Task<IActionResult> MarkWorkAsDone(Guid jobRequestId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
+                
+                if (worker == null)
+                {
+                    return BadRequest(new { message = "Worker profile not found" });
+                }
+
+                var jobRequest = await dbContext.JobRequests
+                    .FirstOrDefaultAsync(j => j.JobRequestId == jobRequestId && j.WorkerId == worker.WorkerId);
+                
+                if (jobRequest == null)
+                {
+                    return BadRequest(new { message = "Job request not found or not assigned to you" });
+                }
+
+                // ===== Update job status to Completed =====
+                jobRequest.Status = "Completed";
+                dbContext.JobRequests.Update(jobRequest);
+
+                // ===== Increment worker's completed jobs count =====
+                worker.CompletedJobs++;
+                dbContext.Workers.Update(worker);
+
+                await dbContext.SaveChangesAsync();
+
+                return Ok(new { message = "Work marked as complete" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Error marking work as done: {ex.Message}" });
+            }
         }
     }
 }

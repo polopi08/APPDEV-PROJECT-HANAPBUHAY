@@ -36,6 +36,10 @@ namespace APPDEV_PROJECT.Data
         // This table stores messages in conversations
         public DbSet<Message> Messages { get; set; }
 
+        // ===== NEW: Added Reviews DbSet =====
+        // This table stores client reviews and ratings for workers
+        public DbSet<Review> Reviews { get; set; }
+
         // ===== NEW: Configure relationships between User and Client/Worker =====
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -104,6 +108,25 @@ namespace APPDEV_PROJECT.Data
                 .WithMany(c => c.Messages)
                 .HasForeignKey(m => m.ConversationId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // ===== NEW: Configure relationships for Review =====
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.JobRequest)
+                .WithMany()
+                .HasForeignKey(r => r.JobRequestId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Worker)
+                .WithMany()
+                .HasForeignKey(r => r.WorkerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Client)
+                .WithMany()
+                .HasForeignKey(r => r.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

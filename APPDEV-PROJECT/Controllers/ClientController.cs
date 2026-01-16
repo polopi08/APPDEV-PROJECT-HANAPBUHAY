@@ -357,6 +357,157 @@ namespace APPDEV_PROJECT.Controllers
             public string Content { get; set; }
         }
 
+        // ===== NEW: Get job status for a conversation =====
+        [HttpGet]
+        [Route("api/client/job-status/{conversationId}")]
+        public async Task<IActionResult> GetJobStatus(Guid conversationId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                var client = await dbContext.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+                
+                if (client == null)
+                {
+                    return BadRequest(new { message = "Client profile not found" });
+                }
+
+                var conversation = await dbContext.Conversations
+                    .FirstOrDefaultAsync(c => c.ConversationId == conversationId && c.ClientId == client.ClientId);
+                
+                if (conversation == null)
+                {
+                    return BadRequest(new { message = "Conversation not found" });
+                }
+
+                var jobRequest = await dbContext.JobRequests
+                    .FirstOrDefaultAsync(j => j.JobRequestId == conversation.JobRequestId);
+                
+                if (jobRequest == null)
+                {
+                    return BadRequest(new { message = "Job request not found" });
+                }
+
+                // Check if review already exists
+                var existingReview = await dbContext.Reviews
+                    .FirstOrDefaultAsync(r => r.JobRequestId == jobRequest.JobRequestId);
+
+                return Ok(new 
+                { 
+                    jobRequestId = jobRequest.JobRequestId,
+                    status = jobRequest.Status,
+                    hasReview = existingReview != null
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        // ===== NEW: Submit review for completed job =====
+        [HttpPost]
+        [Route("api/client/submit-review")]
+        public async Task<IActionResult> SubmitReview([FromBody] SubmitReviewDto dto)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                var client = await dbContext.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+                
+                if (client == null)
+                {
+                    return BadRequest(new { message = "Client profile not found" });
+                }
+
+                var jobRequest = await dbContext.JobRequests
+                    .FirstOrDefaultAsync(j => j.JobRequestId == dto.JobRequestId && j.ClientId == client.ClientId);
+                
+                if (jobRequest == null)
+                {
+                    return BadRequest(new { message = "Job request not found or not authorized" });
+                }
+
+                // Check if review already exists
+                var existingReview = await dbContext.Reviews
+                    .FirstOrDefaultAsync(r => r.JobRequestId == dto.JobRequestId);
+                
+                if (existingReview != null)
+                {
+                    return BadRequest(new { message = "Review already submitted for this job" });
+                }
+
+                // ===== Validate rating =====
+                if (dto.Rating < 1 || dto.Rating > 5)
+                {
+                    return BadRequest(new { message = "Rating must be between 1 and 5" });
+                }
+
+                // ===== Create review =====
+                var review = new Review
+                {
+                    ReviewId = Guid.NewGuid(),
+                    JobRequestId = dto.JobRequestId,
+                    WorkerId = jobRequest.WorkerId,
+                    ClientId = client.ClientId,
+                    Rating = dto.Rating,
+                    ReviewText = dto.ReviewText ?? "",
+                    CreatedAt = DateTime.Now
+                };
+
+                dbContext.Reviews.Add(review);
+
+                // ===== Update job status to Reviewed =====
+                jobRequest.Status = "Reviewed";
+                dbContext.JobRequests.Update(jobRequest);
+
+                // ===== Update worker's average rating =====
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.WorkerId == jobRequest.WorkerId);
+                
+                if (worker != null)
+                {
+                    // Get all reviews for this worker
+                    var allReviews = await dbContext.Reviews
+                        .Where(r => r.WorkerId == worker.WorkerId)
+                        .ToListAsync();
+
+                    allReviews.Add(review); // Include the new review in calculation
+                    
+                    // Calculate average rating
+                    worker.AverageRating = allReviews.Average(r => r.Rating);
+                    dbContext.Workers.Update(worker);
+                }
+
+                await dbContext.SaveChangesAsync();
+
+                return Ok(new { message = "Review submitted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Error submitting review: {ex.Message}" });
+            }
+        }
+
+        // ===== DTO for submitting review =====
+        public class SubmitReviewDto
+        {
+            public Guid JobRequestId { get; set; }
+            public int Rating { get; set; }
+            public string ReviewText { get; set; }
+        }
+
         public IActionResult SearchPage_C()
         {
             return View();

@@ -37,6 +37,10 @@ namespace APPDEV_PROJECT.Models.Entities
 
         public string FullName => $"{FName} {LName}";
 
+        // ===== NEW: Job completion and rating statistics =====
+        public int CompletedJobs { get; set; } = 0;
+        public double AverageRating { get; set; } = 0.0;
+
         // ===== NEW: Navigation property to access the User account =====
         // This allows you to access user info from worker (e.g., worker.User.Email)
         public User? User { get; set; }
