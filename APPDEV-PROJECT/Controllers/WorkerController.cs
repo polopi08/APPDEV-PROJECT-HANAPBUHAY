@@ -551,6 +551,15 @@ namespace APPDEV_PROJECT.Controllers
                     return NotFound();
                 }
 
+                // ===== Get reviews for this worker =====
+                var reviews = await dbContext.Reviews
+                    .Where(r => r.WorkerId == worker.WorkerId)
+                    .Include(r => r.Client)
+                    .OrderByDescending(r => r.CreatedAt)
+                    .ToListAsync();
+
+                ViewBag.Reviews = reviews;
+
                 // Pass to a read-only view
                 return View("ViewWorkerProfile", worker);
             }

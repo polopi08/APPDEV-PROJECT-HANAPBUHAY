@@ -107,11 +107,11 @@
 
                     <div class="stats">
                         <div class="stat">
-                            <div class="stat-value">23</div>
+                            <div class="stat-value">@Model.CompletedJobs</div>
                             <div class="stat-label">Projects Completed</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-value">4.9</div>
+                            <div class="stat-value">@(Model.AverageRating > 0 ? Model.AverageRating.ToString("F1") : "N/A")</div>
                             <div class="stat-label">Rating</div>
                         </div>
                         <div class="stat">
@@ -157,7 +157,7 @@
                 <div class="section-title">Portfolio Highlights</div>
                 <div class="highlights">
                     <div class="highlight">
-                        <div class="highlight-value">23+</div>
+                        <div class="highlight-value">@Model?.CompletedJobs+</div>
                         <div class="highlight-label">Projects Completed</div>
                     </div>
                     <div class="highlight">
@@ -165,7 +165,7 @@
                         <div class="highlight-label">Years Experience</div>
                     </div>
                     <div class="highlight">
-                        <div class="highlight-value">4.9</div>
+                        <div class="highlight-value">@(Model?.AverageRating > 0 ? Model.AverageRating.ToString("F1") : "N/A")</div>
                         <div class="highlight-label">Client Rating</div>
                     </div>
                 </div>
@@ -174,55 +174,42 @@
             <div class="card" style="margin-top: 20px;">
                 <div class="section-title">Client Reviews</div>
                 <div class="reviews-grid">
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="reviewer-name">Maria S.</div>
-                            <div class="stars">?????</div>
+                    @if (ViewBag.Reviews != null && ((List<APPDEV_PROJECT.Models.Entities.Review>)ViewBag.Reviews).Count > 0)
+                    {
+                        @foreach (var review in (List<APPDEV_PROJECT.Models.Entities.Review>)ViewBag.Reviews)
+                        {
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <div class="reviewer-name">@(review.Client != null ? $"{review.Client.FName} {review.Client.LName[0]}." : "Anonymous")</div>
+                                    <div class="stars">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            @if (i <= review.Rating)
+                                            {
+                                                <span>?</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="star-empty">?</span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div class="review-text">
+                                    @(string.IsNullOrEmpty(review.ReviewText) ? "No review text provided" : review.ReviewText)
+                                </div>
+                                <div style="font-size: 12px; color: #999; margin-top: 8px;">
+                                    @review.CreatedAt.ToString("MMMM dd, yyyy")
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #999;">
+                            <p>No reviews yet. Be the first to review this worker!</p>
                         </div>
-                        <div class="review-text">
-                            Professional and efficient. Fixed my problem in no time.
-                        </div>
-                    </div>
-
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="reviewer-name">Liza M.</div>
-                            <div class="stars">?????</div>
-                        </div>
-                        <div class="review-text">
-                            Friendly, fast, and trustworthy technician.
-                        </div>
-                    </div>
-
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="reviewer-name">Mark R.</div>
-                            <div class="stars">????<span class="star-empty">?</span></div>
-                        </div>
-                        <div class="review-text">
-                            Very professional, just took a little longer than expected.
-                        </div>
-                    </div>
-
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="reviewer-name">Monkey I.</div>
-                            <div class="stars">?????</div>
-                        </div>
-                        <div class="review-text">
-                            What a nice one, Thumbs Up!
-                        </div>
-                    </div>
-
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="reviewer-name">Carlo D.</div>
-                            <div class="stars">????<span class="star-empty">?</span></div>
-                        </div>
-                        <div class="review-text">
-                            Very reliable. Excellent at troubleshooting.
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
