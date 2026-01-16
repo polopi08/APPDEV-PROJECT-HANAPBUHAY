@@ -152,62 +152,210 @@ namespace APPDEV_PROJECT.Controllers
             public string ServiceDetails { get; set; }
         }
 
-        /* changes, this is for messaging*/
-                [HttpGet]
-                [Route("api/messages/conversations")]
-                public IActionResult GetConversations(string search = "")
+        /* ===== MESSAGING ENDPOINTS - DATABASE DRIVEN ===== */
+        [HttpGet]
+        [Route("api/messages/conversations")]
+        public async Task<IActionResult> GetConversations(string search = "")
+        {
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
                 {
-                    try
-                    {
-                        var conversations = string.IsNullOrEmpty(search) 
-                            ? MessageHelper.GetConversations()
-                            : MessageHelper.SearchConversations(search);
-                        return Json(conversations);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        return BadRequest(new { error = ex.Message });
-                    }
+                    return Unauthorized(new { message = "User not authenticated" });
                 }
 
-                [HttpGet]
-                [Route("api/messages/{conversationId}")]
-                public IActionResult GetMessages(int conversationId)
+                // ===== Get client profile for the logged-in user =====
+                var client = await dbContext.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+                
+                if (client == null)
                 {
-                    try
-                    {
-                        var messages = MessageHelper.GetMessages(conversationId);
-                        return Json(messages);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        return BadRequest(new { error = ex.Message });
-                    }
+                    return BadRequest(new { message = "Client profile not found" });
                 }
 
-                [HttpPost]
-                [Route("api/messages/send")]
-                public IActionResult SendMessage([FromBody] SendMessageRequest request)
-                {
-                    try
-                    {
-                        if (string.IsNullOrEmpty(request.Content))
-                            return BadRequest(new { error = "Message content cannot be empty" });
+                // ===== Get conversations for this client =====
+                var query = dbContext.Conversations
+                    .Where(c => c.ClientId == client.ClientId)
+                    .Include(c => c.Worker)
+                    .Include(c => c.Messages)
+                    .AsQueryable();
 
-                        var message = MessageHelper.SendMessage(request.ConversationId, request.Content);
-                        return Json(message);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        return BadRequest(new { error = ex.Message });
-                    }
+                // ===== Apply search filter if provided =====
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(c => c.Worker.FullName.Contains(search, StringComparison.OrdinalIgnoreCase));
                 }
 
-                public class SendMessageRequest
+                // ===== Order by last message time =====
+                var conversations = await query
+                    .OrderByDescending(c => c.LastMessageAt ?? c.CreatedAt)
+                    .ToListAsync();
+
+                // ===== Transform to DTO with camelCase properties =====
+                var result = conversations.Select(c => new
                 {
-                    public int ConversationId { get; set; }
-                    public string Content { get; set; }
+                    conversationId = c.ConversationId,
+                    workerId = c.WorkerId,
+                    workerName = c.Worker?.FullName ?? "Unknown Worker",
+                    lastMessage = c.Messages?.OrderByDescending(m => m.SentAt).FirstOrDefault()?.Content ?? "No messages yet",
+                    lastMessageTime = c.LastMessageAt ?? c.CreatedAt,
+                    isOnline = true
+                }).ToList();
+
+                return Json(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("api/client/messages/{conversationId}")]
+        public async Task<IActionResult> GetMessages(Guid conversationId)
+        {
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
                 }
+
+                // ===== Get client profile for the logged-in user =====
+                var client = await dbContext.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+                
+                if (client == null)
+                {
+                    return BadRequest(new { message = "Client profile not found" });
+                }
+
+                // ===== Verify conversation belongs to client and include Worker =====
+                var conversation = await dbContext.Conversations
+                    .Include(c => c.Worker)
+                    .FirstOrDefaultAsync(c => c.ConversationId == conversationId && c.ClientId == client.ClientId);
+                
+                if (conversation == null)
+                {
+                    return BadRequest(new { message = "Conversation not found" });
+                }
+
+                // ===== Get messages for conversation =====
+                var messages = await dbContext.Messages
+                    .Where(m => m.ConversationId == conversationId)
+                    .OrderBy(m => m.SentAt)
+                    .ToListAsync();
+
+                // ===== Transform to DTO with camelCase properties =====
+                var result = messages.Select(m => new
+                {
+                    messageId = m.MessageId,
+                    conversationId = m.ConversationId,
+                    senderId = m.SenderId,
+                    senderName = m.SenderId == userId ? "You" : conversation.Worker?.FullName ?? "Unknown",
+                    content = m.Content,
+                    timestamp = m.SentAt,
+                    isFromClient = m.SenderId == userId,
+                    isRead = m.IsRead
+                }).ToList();
+
+                return Json(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { error = ex.Message, stackTrace = ex.StackTrace });
+            }
+        }
+
+        [HttpPost]
+        [Route("api/client/messages/send")]
+        public async Task<IActionResult> SendMessage([FromBody] SendMessageRequest request)
+        {
+            try
+            {
+                // ===== Validate input =====
+                if (request == null || string.IsNullOrEmpty(request.Content))
+                {
+                    return BadRequest(new { error = "Message content cannot be empty" });
+                }
+
+                if (string.IsNullOrEmpty(request.ConversationId.ToString()))
+                {
+                    return BadRequest(new { error = "Conversation ID is required" });
+                }
+
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                // ===== Get client profile for the logged-in user =====
+                var client = await dbContext.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+                
+                if (client == null)
+                {
+                    return BadRequest(new { message = "Client profile not found" });
+                }
+
+                // ===== Parse ConversationId =====
+                if (!Guid.TryParse(request.ConversationId.ToString(), out var conversationId))
+                {
+                    return BadRequest(new { error = "Invalid conversation ID format" });
+                }
+
+                // ===== Verify conversation belongs to client =====
+                var conversation = await dbContext.Conversations.FirstOrDefaultAsync(c => c.ConversationId == conversationId && c.ClientId == client.ClientId);
+                
+                if (conversation == null)
+                {
+                    return BadRequest(new { message = "Conversation not found. Please create a booking request first." });
+                }
+
+                // ===== Create message =====
+                var message = new Message
+                {
+                    MessageId = Guid.NewGuid(),
+                    ConversationId = conversationId,
+                    SenderId = userId,
+                    Content = request.Content,
+                    SentAt = DateTime.Now,
+                    IsRead = false
+                };
+
+                dbContext.Messages.Add(message);
+                
+                // ===== Update conversation's last message time =====
+                conversation.LastMessageAt = DateTime.Now;
+                dbContext.Conversations.Update(conversation);
+                
+                await dbContext.SaveChangesAsync();
+
+                return Ok(new 
+                { 
+                    message = "Message sent successfully",
+                    messageId = message.MessageId,
+                    content = message.Content,
+                    timestamp = message.SentAt
+                });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { error = ex.Message, stackTrace = ex.StackTrace });
+            }
+        }
+
+        public class SendMessageRequest
+        {
+            public string ConversationId { get; set; }
+            public string Content { get; set; }
+        }
 
         public IActionResult SearchPage_C()
         {

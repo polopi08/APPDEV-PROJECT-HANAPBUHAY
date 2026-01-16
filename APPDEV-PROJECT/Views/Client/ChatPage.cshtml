@@ -48,55 +48,7 @@
             </div>
 
             <div class="chat-list">
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #FFE5B4;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Kyle Bernido</div>
-                        <div class="chat-preview">Can you start tomorrow?</div>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #90EE90;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Vivian Yambao</div>
-                        <div class="chat-preview">Thank you for the project!</div>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #FFFF99;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Viaani Ubalde</div>
-                        <div class="chat-preview">I'll be there by 10 AM</div>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #E6E6FA;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Giselle Valdez</div>
-                        <div class="chat-preview">Plumbing job completed!</div>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #FFB6C1;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Sophia Cutue</div>
-                        <div class="chat-preview">Looking forward to working with you</div>
-                    </div>
-                </div>
+                <!-- Conversations will be loaded dynamically -->
             </div>
         </div>
 
@@ -107,20 +59,15 @@
                     <ion-icon name="person-outline"></ion-icon>
                 </div>
                 <div class="current-chat-info">
-                    <h3>Kyle Bernido</h3>
+                    <h3>Select a conversation</h3>
                     <div class="current-chat-status">Active now</div>
                 </div>
             </div>
 
             <div class="chat-messages">
-                <div class="message">
-                    <div class="message-avatar">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="message-content">
-                        <div class="message-sender">Kyle</div>
-                        <div class="message-bubble">Can you start tomorrow?</div>
-                    </div>
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    <ion-icon name="chatbubbles-outline" style="font-size: 60px; display: block; margin-bottom: 15px;"></ion-icon>
+                    <p>Select a conversation to start messaging</p>
                 </div>
             </div>
 
@@ -138,7 +85,9 @@
 
     <script>
         let currentConversationId = null;
-        const chatItems = document.querySelectorAll('.chat-item');
+        let messageRefreshInterval = null;
+        let lastLoadedMessageCount = 0;
+        
         const chatWindowHeader = document.querySelector('.current-chat-info h3');
         const chatMessages = document.querySelector('.chat-messages');
         const chatInput = document.querySelector('.chat-input');
@@ -146,75 +95,116 @@
         const searchInput = document.querySelector('.search-input');
         const chatList = document.querySelector('.chat-list');
 
-        // Load conversations on page load
+        // Load conversations from database
         function loadConversations(search = '') {
             const url = search ? `/api/messages/conversations?search=${encodeURIComponent(search)}` : '/api/messages/conversations';
             
             fetch(url)
                 .then(response => {
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
                     return response.json();
                 })
                 .then(conversations => {
                     chatList.innerHTML = '';
+                    
+                    if (!conversations || conversations.length === 0) {
+                        chatList.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">No active conversations yet.</div>';
+                        return;
+                    }
+                    
                     conversations.forEach(conv => {
                         const chatItem = document.createElement('div');
                         chatItem.className = 'chat-item';
+                        chatItem.setAttribute('data-conversation-id', conv.conversationId);
+                        
+                        const truncatedMessage = (conv.lastMessage || 'No messages').length > 40 
+                            ? (conv.lastMessage || 'No messages').substring(0, 40) + '...' 
+                            : (conv.lastMessage || 'No messages');
+                        
                         chatItem.innerHTML = `
                             <div class="chat-avatar" style="background: #FFE5B4;">
                                 <ion-icon name="person-outline"></ion-icon>
                             </div>
                             <div class="chat-info">
-                                <div class="chat-name">${conv.WorkerName}</div>
-                                <div class="chat-preview">${conv.LastMessage}</div>
+                                <div class="chat-name">${conv.workerName}</div>
+                                <div class="chat-preview">${truncatedMessage}</div>
                             </div>
                         `;
+                        
                         chatItem.addEventListener('click', function() {
-                            selectConversation(conv.ConversationId, conv.WorkerName);
+                            selectConversation(conv.conversationId, conv.workerName, this);
                         });
+                        
                         chatList.appendChild(chatItem);
                     });
                 })
                 .catch(error => {
                     console.error('Error loading conversations:', error);
-                    chatList.innerHTML = '<div style="padding: 20px; color: #666;">Error loading conversations</div>';
+                    chatList.innerHTML = '<div style="padding: 20px; color: #d9534f;">Error loading conversations</div>';
                 });
         }
 
-        // Load messages for a conversation
-        function loadMessages(conversationId) {
-            fetch(`/api/messages/${conversationId}`)
+        // Load messages from database
+        function loadMessages(conversationId, forceRefresh = false) {
+            fetch(`/api/client/messages/${conversationId}`)
                 .then(response => {
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
                     return response.json();
                 })
                 .then(messages => {
-                    chatMessages.innerHTML = '';
-                    messages.forEach(msg => {
-                        const messageDiv = document.createElement('div');
-                        messageDiv.className = `message ${msg.IsFromClient ? 'sent' : ''}`;
-                        messageDiv.innerHTML = `
-                            <div class="message-avatar">
-                                <ion-icon name="person-outline"></ion-icon>
-                            </div>
-                            <div class="message-content">
-                                <div class="message-sender">${msg.SenderName}</div>
-                                <div class="message-bubble">${msg.Content}</div>
-                            </div>
-                        `;
-                        chatMessages.appendChild(messageDiv);
-                    });
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    const shouldRefresh = forceRefresh || messages.length !== lastLoadedMessageCount;
+                    
+                    if (shouldRefresh) {
+                        chatMessages.innerHTML = '';
+                        lastLoadedMessageCount = messages.length;
+                        
+                        if (!messages || messages.length === 0) {
+                            chatMessages.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">No messages yet. Start the conversation!</div>';
+                            return;
+                        }
+                        
+                        messages.forEach(msg => {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = `message ${msg.isFromClient ? 'sent' : 'received'}`;
+                            messageDiv.innerHTML = `
+                                <div class="message-avatar">
+                                    <ion-icon name="person-outline"></ion-icon>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-sender">${msg.senderName || 'Unknown'}</div>
+                                    <div class="message-bubble">${msg.content || ''}</div>
+                                    <div class="message-time">${new Date(msg.timestamp).toLocaleTimeString()}</div>
+                                </div>
+                            `;
+                            chatMessages.appendChild(messageDiv);
+                        });
+                        
+                        // Auto scroll to bottom
+                        setTimeout(() => {
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }, 0);
+                    }
                 })
                 .catch(error => {
                     console.error('Error loading messages:', error);
+                    chatMessages.innerHTML = `<div style="text-align: center; padding: 20px; color: red;">Error loading messages</div>`;
                 });
         }
 
         // Select a conversation
-        function selectConversation(conversationId, workerName) {
+        function selectConversation(conversationId, workerName, element) {
             currentConversationId = conversationId;
             chatWindowHeader.textContent = workerName;
+            lastLoadedMessageCount = 0;
+            
+            // Clear previous interval
+            if (messageRefreshInterval) {
+                clearInterval(messageRefreshInterval);
+            }
             
             // Remove active class from all items
             document.querySelectorAll('.chat-item').forEach(item => {
@@ -223,19 +213,33 @@
             });
             
             // Add active class to clicked item
-            event.currentTarget.classList.add('active');
-            event.currentTarget.style.background = '#FFF8E7';
+            element.classList.add('active');
+            element.style.background = '#FFF8E7';
             
-            loadMessages(conversationId);
+            // Load messages immediately
+            loadMessages(conversationId, true);
+            
+            // Auto-refresh messages every 2 seconds
+            messageRefreshInterval = setInterval(() => {
+                loadMessages(conversationId, false);
+            }, 2000);
         }
 
         // Send message function
         function sendMessage() {
             const messageText = chatInput.value.trim();
 
-            if (messageText === '' || !currentConversationId) return;
+            if (messageText === '' || !currentConversationId) {
+                if (!currentConversationId) {
+                    alert('Please select a conversation first');
+                }
+                return;
+            }
 
-            fetch('/api/messages/send', {
+            // Disable send button
+            sendBtn.disabled = true;
+
+            fetch('/api/client/messages/send', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -246,28 +250,27 @@
                 })
             })
             .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || data.message || 'Failed to send message');
+                    });
+                }
                 return response.json();
             })
-            .then(message => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message sent';
-                messageDiv.innerHTML = `
-                    <div class="message-avatar">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="message-content">
-                        <div class="message-sender">You</div>
-                        <div class="message-bubble">${messageText}</div>
-                    </div>
-                `;
-                chatMessages.appendChild(messageDiv);
+            .then(result => {
                 chatInput.value = '';
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                // Force reload messages after sending
+                setTimeout(() => {
+                    loadMessages(currentConversationId, true);
+                }, 100);
             })
             .catch(error => {
-                console.error('Error sending message:', error);
-                alert('Failed to send message');
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
+            })
+            .finally(() => {
+                sendBtn.disabled = false;
+                chatInput.focus();
             });
         }
 
@@ -276,7 +279,8 @@
 
         // Send message with Enter key
         chatInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !sendBtn.disabled) {
+                e.preventDefault();
                 sendMessage();
             }
         });
@@ -288,6 +292,13 @@
 
         // Load conversations on page load
         loadConversations();
+
+        // Cleanup interval when leaving page
+        window.addEventListener('beforeunload', function() {
+            if (messageRefreshInterval) {
+                clearInterval(messageRefreshInterval);
+            }
+        });
     </script>
 </body>
 </html>

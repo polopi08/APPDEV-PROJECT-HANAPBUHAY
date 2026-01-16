@@ -28,6 +28,14 @@ namespace APPDEV_PROJECT.Data
         // This table stores notifications for users
         public DbSet<Notification> Notifications { get; set; }
 
+        // ===== NEW: Added Conversations DbSet =====
+        // This table stores conversations between clients and workers
+        public DbSet<Conversation> Conversations { get; set; }
+
+        // ===== NEW: Added Messages DbSet =====
+        // This table stores messages in conversations
+        public DbSet<Message> Messages { get; set; }
+
         // ===== NEW: Configure relationships between User and Client/Worker =====
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,6 +72,38 @@ namespace APPDEV_PROJECT.Data
                 .WithMany()
                 .HasForeignKey(n => n.JobRequestId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            // ===== NEW: Configure relationships for Conversation =====
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.Client)
+                .WithMany()
+                .HasForeignKey(c => c.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.Worker)
+                .WithMany()
+                .HasForeignKey(c => c.WorkerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.JobRequest)
+                .WithMany()
+                .HasForeignKey(c => c.JobRequestId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasMany(c => c.Messages)
+                .WithOne(m => m.Conversation)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ===== NEW: Configure relationships for Message =====
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

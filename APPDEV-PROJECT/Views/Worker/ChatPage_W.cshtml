@@ -48,65 +48,27 @@
             </div>
 
             <div class="chat-list">
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #FFE5B4;">
-                        <ion-icon name="person-outline"></ion-icon>
+                @if (ViewBag.Conversations != null && ((List<APPDEV_PROJECT.Models.Entities.Conversation>)ViewBag.Conversations).Count > 0)
+                {
+                    @foreach (var conversation in (List<APPDEV_PROJECT.Models.Entities.Conversation>)ViewBag.Conversations)
+                    {
+                        <div class="chat-item" data-conversation-id="@conversation.ConversationId" data-client-name="@conversation.Client?.FullName">
+                            <div class="chat-avatar" style="background: #FFE5B4;">
+                                <ion-icon name="person-outline"></ion-icon>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-name">@conversation.Client?.FullName ?? "Unknown Client"</div>
+                                <div class="chat-preview">Click to view messages</div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div style="text-align: center; padding: 20px; color: #999;">
+                        <p>No active conversations yet.</p>
                     </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Sophia Lizarondo</div>
-                        <div class="chat-preview">Dito na po ako, sir !</div>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #90EE90;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Marvin James</div>
-                        <div class="chat-preview">Okay na po. Tapos na po sir!</div>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #FFFF99;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Andre Ramos</div>
-                        <div class="chat-preview">Thank you po!</div>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #E6E6FA;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Russell Jay Fajardo</div>
-                        <div class="chat-preview">Salamat ser!</div>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #FFB6C1;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Kyle Bernido</div>
-                        <div class="chat-preview">Gihugma tika</div>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #FFE5B4;">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-name">Jairus Chrisnie</div>
-                        <div class="chat-preview">bruh</div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
 
@@ -117,20 +79,15 @@
                     <ion-icon name="person-outline"></ion-icon>
                 </div>
                 <div class="current-chat-info">
-                    <h3>Marvin James</h3>
+                    <h3>Select a chat</h3>
                     <div class="current-chat-status">Active now</div>
                 </div>
             </div>
 
             <div class="chat-messages">
-                <div class="message">
-                    <div class="message-avatar">
-                        <ion-icon name="person-outline"></ion-icon>
-                    </div>
-                    <div class="message-content">
-                        <div class="message-sender">Marvin</div>
-                        <div class="message-bubble">Okay na po. Tapos na po sir!</div>
-                    </div>
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    <ion-icon name="chatbubbles-outline" style="font-size: 60px; display: block; margin-bottom: 15px;"></ion-icon>
+                    <p>Select a conversation to start messaging</p>
                 </div>
             </div>
 
@@ -153,10 +110,13 @@
         const chatMessages = document.querySelector('.chat-messages');
         const chatInput = document.querySelector('.chat-input');
         const sendBtn = document.querySelector('.send-btn');
+        let selectedConversationId = null;
+        let lastLoadedMessageCount = 0;
+        let messageRefreshInterval = null;
 
         // Add click event to each chat item
         chatItems.forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', async function() {
                 // Remove active class from all items
                 chatItems.forEach(el => {
                     el.classList.remove('active');
@@ -167,52 +127,121 @@
                 this.classList.add('active');
                 this.style.background = '#FFF8E7';
 
-                // Update the chat window header with selected person's name
-                const selectedName = this.querySelector('.chat-name').textContent;
-                chatWindowHeader.textContent = selectedName;
+                // Get conversation ID and client name
+                selectedConversationId = this.getAttribute('data-conversation-id');
+                const clientName = this.getAttribute('data-client-name');
+                
+                // Update the chat window header
+                chatWindowHeader.textContent = clientName;
+                lastLoadedMessageCount = 0;
 
-                // Clear previous messages
-                const selectedPreview = this.querySelector('.chat-preview').textContent;
-                chatMessages.innerHTML = `
-                    <div class="message">
-                        <div class="message-avatar">
-                            <ion-icon name="person-outline"></ion-icon>
-                        </div>
-                        <div class="message-content">
-                            <div class="message-sender">${selectedName}</div>
-                            <div class="message-bubble">${selectedPreview}</div>
-                        </div>
-                    </div>
-                `;
+                // Clear previous interval
+                if (messageRefreshInterval) {
+                    clearInterval(messageRefreshInterval);
+                }
+
+                // Load messages immediately
+                loadMessages(selectedConversationId, true);
+
+                // Auto-refresh messages every 2 seconds
+                messageRefreshInterval = setInterval(() => {
+                    loadMessages(selectedConversationId, false);
+                }, 2000);
             });
         });
 
+        // Load messages function
+        function loadMessages(conversationId, forceRefresh = false) {
+            fetch(`/api/worker/messages/${conversationId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(messages => {
+                    const shouldRefresh = forceRefresh || messages.length !== lastLoadedMessageCount;
+                    
+                    if (shouldRefresh) {
+                        chatMessages.innerHTML = '';
+                        lastLoadedMessageCount = messages.length;
+                        
+                        if (!messages || messages.length === 0) {
+                            chatMessages.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">No messages yet. Start the conversation!</div>';
+                            return;
+                        }
+                        
+                        messages.forEach(msg => {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = `message ${msg.isFromWorker ? 'sent' : 'received'}`;
+                            messageDiv.innerHTML = `
+                                <div class="message-avatar">
+                                    <ion-icon name="person-outline"></ion-icon>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-sender">${msg.senderName || 'Unknown'}</div>
+                                    <div class="message-bubble">${msg.content || ''}</div>
+                                    <div class="message-time">${new Date(msg.timestamp).toLocaleTimeString()}</div>
+                                </div>
+                            `;
+                            chatMessages.appendChild(messageDiv);
+                        });
+                        
+                        // Auto scroll to bottom
+                        setTimeout(() => {
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }, 0);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading messages:', error);
+                    chatMessages.innerHTML = '<div style="text-align: center; padding: 20px; color: red;">Error loading messages</div>';
+                });
+        }
+
         // Function to send message
-        function sendMessage() {
+        async function sendMessage() {
+            if (!selectedConversationId) {
+                alert('Please select a conversation first');
+                return;
+            }
+
             const messageText = chatInput.value.trim();
 
-            if (messageText === '') return; // Don't send empty messages
+            if (messageText === '') return;
 
-            // Create sent message
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message sent';
-            messageDiv.innerHTML = `
-                <div class="message-avatar">
-                    <ion-icon name="person-outline"></ion-icon>
-                </div>
-                <div class="message-content">
-                    <div class="message-sender">You</div>
-                    <div class="message-bubble">${messageText}</div>
-                </div>
-            `;
+            sendBtn.disabled = true;
 
-            chatMessages.appendChild(messageDiv);
+            try {
+                const response = await fetch('/api/worker/messages/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        ConversationId: selectedConversationId,
+                        Content: messageText
+                    })
+                });
 
-            // Clear input
-            chatInput.value = '';
-
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+                if (response.ok) {
+                    chatInput.value = '';
+                    // Force reload messages after sending
+                    setTimeout(() => {
+                        loadMessages(selectedConversationId, true);
+                    }, 100);
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    alert('Error sending message');
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Error sending message: ' + error.message);
+            } finally {
+                sendBtn.disabled = false;
+                chatInput.focus();
+            }
         }
 
         // Send button click
@@ -220,8 +249,16 @@
 
         // Send message with Enter key
         chatInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !sendBtn.disabled) {
+                e.preventDefault();
                 sendMessage();
+            }
+        });
+
+        // Cleanup interval when leaving page
+        window.addEventListener('beforeunload', function() {
+            if (messageRefreshInterval) {
+                clearInterval(messageRefreshInterval);
             }
         });
     </script>

@@ -354,6 +354,20 @@ namespace APPDEV_PROJECT.Controllers
                 dbContext.JobRequests.Update(jobRequest);
                 await dbContext.SaveChangesAsync();
 
+                // ===== NEW: Create Conversation for messaging =====
+                var conversation = new Conversation
+                {
+                    ConversationId = Guid.NewGuid(),
+                    ClientId = jobRequest.ClientId,
+                    WorkerId = jobRequest.WorkerId,
+                    JobRequestId = jobRequest.JobRequestId,
+                    CreatedAt = DateTime.Now,
+                    IsActive = true
+                };
+
+                dbContext.Conversations.Add(conversation);
+                await dbContext.SaveChangesAsync();
+
                 // ===== NEW: Create notification for client =====
                 var clientNotification = new Notification
                 {
@@ -485,6 +499,31 @@ namespace APPDEV_PROJECT.Controllers
 
         public IActionResult ChatPage_W()
         {
+            // ===== Get the logged-in user's ID from claims =====
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            {
+                return RedirectToAction("LoginPage", "Account");
+            }
+
+            // ===== Get worker profile for the logged-in user =====
+            var worker = dbContext.Workers.FirstOrDefault(w => w.UserId == userId);
+            
+            if (worker == null)
+            {
+                return RedirectToAction("InfoPage_W");
+            }
+
+            // ===== Get conversations for this worker =====
+            var conversations = dbContext.Conversations
+                .Where(c => c.WorkerId == worker.WorkerId)
+                .Include(c => c.Client)
+                .OrderByDescending(c => c.CreatedAt)
+                .ToList();
+
+            ViewBag.Conversations = conversations;
+
             return View();
         }
 
@@ -511,6 +550,122 @@ namespace APPDEV_PROJECT.Controllers
                 ModelState.AddModelError("", $"Error loading worker profile: {ex.Message}");
                 return RedirectToAction("SearchPage_C", "Client");
             }
+        }
+
+        // ===== NEW: Get messages for a conversation =====
+        [HttpGet]
+        [Route("api/worker/messages/{conversationId}")]
+        public async Task<IActionResult> GetMessages(Guid conversationId)
+        {
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                // ===== Get worker profile =====
+                var worker = await dbContext.Workers.FirstOrDefaultAsync(w => w.UserId == userId);
+                
+                if (worker == null)
+                {
+                    return BadRequest(new { message = "Worker profile not found" });
+                }
+
+                // ===== Verify conversation belongs to worker and include Client =====
+                var conversation = await dbContext.Conversations
+                    .Include(c => c.Client)
+                    .FirstOrDefaultAsync(c => c.ConversationId == conversationId && c.WorkerId == worker.WorkerId);
+                
+                if (conversation == null)
+                {
+                    return BadRequest(new { message = "Conversation not found" });
+                }
+
+                var messages = await dbContext.Messages
+                    .Where(m => m.ConversationId == conversationId)
+                    .OrderBy(m => m.SentAt)
+                    .ToListAsync();
+
+                // ===== Transform to DTO with camelCase properties =====
+                var result = messages.Select(m => new
+                {
+                    messageId = m.MessageId,
+                    conversationId = m.ConversationId,
+                    senderId = m.SenderId,
+                    senderName = m.SenderId == userId ? "You" : conversation.Client?.FullName ?? "Unknown",
+                    content = m.Content,
+                    timestamp = m.SentAt,
+                    isFromWorker = m.SenderId == userId,
+                    isRead = m.IsRead
+                }).ToList();
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        // ===== NEW: Send a message =====
+        [HttpPost]
+        [Route("api/worker/messages/send")]
+        public async Task<IActionResult> SendMessage([FromBody] SendMessageDto dto)
+        {
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return Unauthorized(new { message = "User not authenticated" });
+                }
+
+                // ===== Verify conversation exists =====
+                var conversation = await dbContext.Conversations.FindAsync(Guid.Parse(dto.ConversationId));
+                
+                if (conversation == null)
+                {
+                    return BadRequest(new { message = "Conversation not found" });
+                }
+
+                // ===== Create message =====
+                var message = new Message
+                {
+                    MessageId = Guid.NewGuid(),
+                    ConversationId = Guid.Parse(dto.ConversationId),
+                    SenderId = userId,
+                    Content = dto.Content,
+                    SentAt = DateTime.Now,
+                    IsRead = false
+                };
+
+                dbContext.Messages.Add(message);
+                
+                // ===== Update conversation's last message time =====
+                conversation.LastMessageAt = DateTime.Now;
+                dbContext.Conversations.Update(conversation);
+                
+                await dbContext.SaveChangesAsync();
+
+                return Ok(new { message = "Message sent successfully", messageId = message.MessageId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Error sending message: {ex.Message}" });
+            }
+        }
+
+        // ===== DTO for sending messages =====
+        public class SendMessageDto
+        {
+            public string ConversationId { get; set; }
+            public string Content { get; set; }
         }
     }
 }
