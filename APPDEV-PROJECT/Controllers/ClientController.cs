@@ -706,5 +706,42 @@ namespace APPDEV_PROJECT.Controllers
         {
             return View("NotifPage");
         }
+
+        // ===== NEW: Get notifications for client =====
+        [HttpGet]
+        public async Task<IActionResult> NotifPage()
+        {
+            try
+            {
+                // ===== Get the logged-in user's ID from claims =====
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return RedirectToAction("LoginPage", "Account");
+                }
+
+                // ===== Get client profile for the logged-in user =====
+                var client = await dbContext.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+                
+                if (client == null)
+                {
+                    return RedirectToAction("InfoPage_C");
+                }
+
+                // ===== Get notifications for this client =====
+                var notifications = await dbContext.Notifications
+                    .Where(n => n.RecipientId == userId)
+                    .OrderByDescending(n => n.CreatedAt)
+                    .ToListAsync();
+
+                return View(notifications);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error loading notifications: {ex.Message}");
+                return View(new List<Notification>());
+            }
+        }
     }
 }
