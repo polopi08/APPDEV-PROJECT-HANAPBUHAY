@@ -34,13 +34,8 @@
             {
                 <!-- ===== PROFILE CARD WITH DATABASE DATA ===== -->
                 <div class="card profile-card">
-                    <div class="avatar" onclick="document.getElementById('photoInput').click()">
-                        <img id="profileImage" src="" alt="Profile Picture" class="profile-img">
-                        <div class="avatar-placeholder" id="placeholder">
-                            <span class="add-photo-icon"><ion-icon name="camera-outline"></ion-icon></span>
-                            <span class="add-photo-text">Add Photo</span>
-                        </div>
-                        <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                    <div class="avatar">
+                        <ion-icon name="person-circle-outline" style="font-size: 80px; color: #460F02;"></ion-icon>
                     </div>
                     <!-- ===== DISPLAY NAME, ADDRESS, EXPERIENCE FROM DATABASE ===== -->
                     <div class="name">@Model.FullName</div>
@@ -158,23 +153,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('photoInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = document.getElementById('profileImage');
-                    const placeholder = document.getElementById('placeholder');
-                    img.src = event.target.result;
-                    img.style.display = 'block';
-                    placeholder.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

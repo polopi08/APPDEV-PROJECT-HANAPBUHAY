@@ -56,7 +56,7 @@
         <div class="chat-window">
             <div class="chat-window-header">
                 <div class="current-chat-avatar">
-                    <ion-icon name="person-outline"></ion-icon>
+                    <ion-icon name="person-circle-outline" style="font-size: 50px;"></ion-icon>
                 </div>
                 <div class="current-chat-info">
                     <h3>Select a conversation</h3>
@@ -163,7 +163,7 @@
                         
                         chatItem.innerHTML = `
                             <div class="chat-avatar" style="background: #FFE5B4;">
-                                <ion-icon name="person-outline"></ion-icon>
+                                <ion-icon name="person-circle-outline" style="font-size: 40px;"></ion-icon>
                             </div>
                             <div class="chat-info">
                                 <div class="chat-name">${conv.workerName}</div>
@@ -210,7 +210,7 @@
                             messageDiv.className = `message ${msg.isFromClient ? 'sent' : 'received'}`;
                             messageDiv.innerHTML = `
                                 <div class="message-avatar">
-                                    <ion-icon name="person-outline"></ion-icon>
+                                    <ion-icon name="person-circle-outline" style="font-size: 32px;"></ion-icon>
                                 </div>
                                 <div class="message-content">
                                     <div class="message-sender">${msg.senderName || 'Unknown'}</div>

@@ -73,6 +73,7 @@ body {
     font-size: 15px; 
     transition: all 0.3s ease;
     position: relative;
+    
 }
 
 
@@ -97,74 +98,7 @@ body {
     width: 60%;
 }
 
-.navbar_btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 1rem;
-    width: 100%;
-}
 
-.button1,
-.button2 {
-    font-size: 15px; 
-}
-
-.button1 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    padding: 6px 10px;
-    height: 100%;
-    width: 100%;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    background: #FCECC9;
-    color: #460F02;
-    white-space: nowrap;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-
-.button1:hover {
-    background: #460F02;
-    color: #FCECC9;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(70, 15, 2, 0.3);
-}
-
-.button2 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    padding: 6px 10px;
-    height: 100%;
-    width: 100%;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    background: #AF410E;
-    color: #FFFFFF;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-
-.button2:hover {
-    background: #8B3309;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(175, 65, 14, 0.4);
-}
-
-.navbar_btn:nth-child(5) {
-    margin-right: -80px; 
-}
 
 
 .hero {

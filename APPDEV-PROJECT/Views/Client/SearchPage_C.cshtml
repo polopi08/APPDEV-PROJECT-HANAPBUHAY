@@ -146,7 +146,9 @@
                                 <div class="worker-name">${worker.Name}</div>
                                 <span class="worker-distance">${parseFloat(worker.DistanceKm).toFixed(2)}km away</span>
                             </div>
-                            <div class="worker-image">Profile Image</div>
+                            <div class="worker-image">
+                                <ion-icon name="person-circle-outline" style="font-size: 80px;"></ion-icon>
+                            </div>
                             <div class="worker-job">${worker.Skill}</div>
                             
                             <button class="view-details-btn" onclick="viewWorkerDetails('${worker.Id}')">View Details</button>
