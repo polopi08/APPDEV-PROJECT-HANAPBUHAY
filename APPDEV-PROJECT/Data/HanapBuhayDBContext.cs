@@ -40,6 +40,10 @@ namespace APPDEV_PROJECT.Data
         // This table stores client reviews and ratings for workers
         public DbSet<Review> Reviews { get; set; }
 
+        // ===== NEW: Added Reports DbSet =====
+        // This table stores user reports for inappropriate content/behavior
+        public DbSet<Report> Reports { get; set; }
+
         // ===== NEW: Configure relationships between User and Client/Worker =====
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -127,6 +131,19 @@ namespace APPDEV_PROJECT.Data
                 .WithMany()
                 .HasForeignKey(r => r.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // ===== NEW: Configure relationships for Report =====
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.Reporter)
+                .WithMany()
+                .HasForeignKey(r => r.ReporterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.ReportedWorker)
+                .WithMany()
+                .HasForeignKey(r => r.ReportedWorkerId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

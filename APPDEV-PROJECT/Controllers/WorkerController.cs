@@ -91,7 +91,9 @@ namespace APPDEV_PROJECT.Controllers
                         Longitude = longitude,
                         Skill = viewModel.Skill,
                         YearsOfExperience = viewModel.YearsOfExperience,
-                        Accomplishments = viewModel.Accomplishments
+                        Accomplishments = viewModel.Accomplishments ?? string.Empty,
+                        CompletedJobs = 0,
+                        AverageRating = 0.0
                     };
 
                     // ===== STEP 3: Save worker profile to database =====
@@ -136,7 +138,8 @@ namespace APPDEV_PROJECT.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", $"Error saving worker information: {ex.Message}");
+                    var innerError = ex.InnerException != null ? $" Inner Error: {ex.InnerException.Message}" : "";
+                    ModelState.AddModelError("", $"Error saving worker information: {ex.Message}{innerError}");
                 }
             }
 

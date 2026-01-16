@@ -27,7 +27,11 @@ namespace APPDEV_PROJECT.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Skill = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     YearsOfExperience = table.Column<int>(type: "int", nullable: false),
-                    Accomplishments = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Accomplishments = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Latitude = table.Column<double>(type: "float", nullable: true),
+                    Longitude = table.Column<double>(type: "float", nullable: true),
+                    CompletedJobs = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    AverageRating = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0)
                 },
                 constraints: table =>
                 {

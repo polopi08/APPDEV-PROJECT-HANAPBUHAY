@@ -11,19 +11,7 @@ namespace APPDEV_PROJECT.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // ===== STEP 1: Delete existing clients to avoid unique constraint violation =====
-            // The old clients don't have users and can't be linked
-            // We'll remove them so new users can create fresh profiles
-            migrationBuilder.Sql("DELETE FROM Clients");
-
-            // ===== STEP 2: Add UserId column as nullable first =====
-            migrationBuilder.AddColumn<Guid>(
-                name: "UserId",
-                table: "Clients",
-                type: "uniqueidentifier",
-                nullable: true);  // ===== CHANGED: nullable: true instead of false =====
-
-            // ===== STEP 3: Create the Users table =====
+            // ===== STEP 1: Create the Users table first =====
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -41,22 +29,29 @@ namespace APPDEV_PROJECT.Migrations
                     table.PrimaryKey("PK_Users", x => x.UserId);
                 });
 
-            // ===== STEP 4: Create unique index on UserId =====
-            // Now this won't fail because UserId is nullable and we deleted duplicate nulls
+            // ===== STEP 2: Add UserId column to Clients as nullable =====
+            // We don't delete any data - just add the column as nullable
+            migrationBuilder.AddColumn<Guid>(
+                name: "UserId",
+                table: "Clients",
+                type: "uniqueidentifier",
+                nullable: true);
+
+            // ===== STEP 3: Create unique index on UserId =====
             migrationBuilder.CreateIndex(
                 name: "IX_Clients_UserId",
                 table: "Clients",
                 column: "UserId",
                 unique: true);
 
-            // ===== STEP 5: Create foreign key relationship =====
+            // ===== STEP 4: Create foreign key relationship =====
             migrationBuilder.AddForeignKey(
                 name: "FK_Clients_Users_UserId",
                 table: "Clients",
                 column: "UserId",
                 principalTable: "Users",
                 principalColumn: "UserId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.SetNull);
         }
 
         /// <inheritdoc />

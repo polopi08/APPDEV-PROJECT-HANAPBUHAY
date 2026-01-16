@@ -11,20 +11,6 @@ namespace APPDEV_PROJECT.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<double>(
-                name: "AverageRating",
-                table: "Workers",
-                type: "float",
-                nullable: false,
-                defaultValue: 0.0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "CompletedJobs",
-                table: "Workers",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
             migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
@@ -81,14 +67,6 @@ namespace APPDEV_PROJECT.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Reviews");
-
-            migrationBuilder.DropColumn(
-                name: "AverageRating",
-                table: "Workers");
-
-            migrationBuilder.DropColumn(
-                name: "CompletedJobs",
-                table: "Workers");
         }
     }
 }
